@@ -1,0 +1,5 @@
+# Block dotfiles such as .env
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+Options -Indexes
