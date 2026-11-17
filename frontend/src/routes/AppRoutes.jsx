@@ -5,28 +5,13 @@ import CitizenLayout from '../layouts/CitizenLayout';
 import OfficerLayout from '../layouts/OfficerLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import RoutePlaceholder from '../pages/RoutePlaceholder';
+import Home from '../pages/public/Home';
+import About from '../pages/public/About';
+import Services from '../pages/public/Services';
 import Button from '../components/ui/Button';
 
-const PUBLIC_PAGES = [
-  {
-    index: true,
-    title: 'Home',
-    description: 'Public landing page for the Digital Police Portal.',
-    expectedPhase: 'Phase 3',
-    breadcrumbs: [],
-  },
-  {
-    path: 'about',
-    title: 'About',
-    description: 'About the Digital Police Portal project.',
-    expectedPhase: 'Phase 3',
-  },
-  {
-    path: 'services',
-    title: 'Services',
-    description: 'Services that will be available through the portal.',
-    expectedPhase: 'Phase 3',
-  },
+// Public pages that are still placeholders (How It Works, FAQ and Contact arrive in Batch 3).
+const PUBLIC_PLACEHOLDERS = [
   {
     path: 'how-it-works',
     title: 'How It Works',
@@ -202,7 +187,10 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<PublicLayout />}>
-        {renderPages('public', PUBLIC_PAGES)}
+        <Route index element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="services" element={<Services />} />
+        {renderPages('public', PUBLIC_PLACEHOLDERS)}
         <Route path="*" element={<NotFound />} />
       </Route>
 
