@@ -8,28 +8,13 @@ import RoutePlaceholder from '../pages/RoutePlaceholder';
 import Home from '../pages/public/Home';
 import About from '../pages/public/About';
 import Services from '../pages/public/Services';
+import HowItWorks from '../pages/public/HowItWorks';
+import FAQ from '../pages/public/FAQ';
+import Contact from '../pages/public/Contact';
 import Button from '../components/ui/Button';
 
-// Public pages that are still placeholders (How It Works, FAQ and Contact arrive in Batch 3).
-const PUBLIC_PLACEHOLDERS = [
-  {
-    path: 'how-it-works',
-    title: 'How It Works',
-    description: 'The complaint management process, step by step.',
-    expectedPhase: 'Phase 3',
-  },
-  {
-    path: 'faq',
-    title: 'FAQ',
-    description: 'Frequently asked questions about the portal.',
-    expectedPhase: 'Phase 3',
-  },
-  {
-    path: 'contact',
-    title: 'Contact',
-    description: 'Ways to get in touch with the project team.',
-    expectedPhase: 'Phase 3',
-  },
+// Login and Register stay as placeholders until Phase 5 (Authentication and Role Management).
+const AUTH_PLACEHOLDERS = [
   {
     path: 'login',
     title: 'Login',
@@ -190,7 +175,10 @@ export default function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="services" element={<Services />} />
-        {renderPages('public', PUBLIC_PLACEHOLDERS)}
+        <Route path="how-it-works" element={<HowItWorks />} />
+        <Route path="faq" element={<FAQ />} />
+        <Route path="contact" element={<Contact />} />
+        {renderPages('public', AUTH_PLACEHOLDERS)}
         <Route path="*" element={<NotFound />} />
       </Route>
 
