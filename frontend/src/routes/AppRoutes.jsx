@@ -1,10 +1,12 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
-import { Compass, LogIn, UserPlus } from 'lucide-react';
+import { Compass } from 'lucide-react';
 import PublicLayout from '../layouts/PublicLayout';
 import CitizenLayout from '../layouts/CitizenLayout';
 import OfficerLayout from '../layouts/OfficerLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import RoutePlaceholder from '../pages/RoutePlaceholder';
+import LoginPage from '../pages/auth/LoginPage';
+import RegisterPage from '../pages/auth/RegisterPage';
 import Home from '../pages/public/Home';
 import About from '../pages/public/About';
 import Services from '../pages/public/Services';
@@ -30,23 +32,34 @@ const PUBLIC_PLACEHOLDERS = [
     description: 'Ways to get in touch with the project team.',
     expectedPhase: 'Phase 3',
   },
+];
+
+const AUTH_PLACEHOLDERS = [
   {
-    path: 'login',
-    title: 'Login',
-    description: 'Sign in to your portal account.',
+    path: 'forgot-password',
+    title: 'Forgot Password',
+    description: 'Request a reset link without revealing whether the account exists.',
     expectedPhase: 'Phase 5 (Authentication and Role Management)',
-    statusLabel: 'Not yet available',
-    heading: 'Login is not available yet',
-    icon: LogIn,
   },
   {
-    path: 'register',
-    title: 'Register',
-    description: 'Create a citizen account.',
+    path: 'reset-password',
+    title: 'Reset Password',
+    description: 'Set a new password using a time-limited token from the backend.',
     expectedPhase: 'Phase 5 (Authentication and Role Management)',
-    statusLabel: 'Not yet available',
-    heading: 'Registration is not available yet',
-    icon: UserPlus,
+  },
+  {
+    path: 'change-password',
+    title: 'Change Password',
+    description: 'Update your current password from a signed-in account.',
+    expectedPhase: 'Phase 5 (Authentication and Role Management)',
+  },
+  {
+    path: 'unauthorized',
+    title: 'Unauthorized Access',
+    description: 'The account does not have permission to view this page.',
+    expectedPhase: 'Phase 5 (Authentication and Role Management)',
+    statusLabel: 'Access denied',
+    heading: 'You do not have permission to view this area',
   },
 ];
 
@@ -190,7 +203,10 @@ export default function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="services" element={<Services />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
         {renderPages('public', PUBLIC_PLACEHOLDERS)}
+        {renderPages('public', AUTH_PLACEHOLDERS)}
         <Route path="*" element={<NotFound />} />
       </Route>
 

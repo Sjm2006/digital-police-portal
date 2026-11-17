@@ -12,6 +12,7 @@
 - PHP foundation: env loader, config (app/database/cors), JSON response helpers, global exception handler, credentialed CORS, `api/health.php`.
 - `.htaccess` deny rules for non-endpoint backend folders, `.env`, and private storage.
 - Documentation set and README.
+- Phase 5 Batch 1: reusable authentication layout foundation, auth card, password visibility control, success/error feedback, responsive login and registration preview screens.
 
 ## Files created
 Root: `README.md`, `.gitignore`.
