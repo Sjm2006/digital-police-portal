@@ -1,22 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, Shield, X } from 'lucide-react';
+import { LogIn, Menu, Shield, UserPlus, X } from 'lucide-react';
 import Button from '../ui/Button';
+import { AUTH_LINKS, MAIN_NAV, SITE_NAME } from '../../constants/site';
 
 const cx = (...classes) => classes.filter(Boolean).join(' ');
-
-const NAV_LINKS = [
-  { label: 'Home', to: '/' },
-  { label: 'About', to: '/about' },
-  { label: 'Services', to: '/services' },
-  { label: 'Contact', to: '/contact' },
-];
-
-const PORTAL_LINKS = [
-  { label: 'Citizen Portal', to: '/citizen/dashboard' },
-  { label: 'Officer Portal', to: '/officer/dashboard' },
-  { label: 'Admin Portal', to: '/admin/dashboard' },
-];
 
 const MOBILE_MENU_ID = 'public-mobile-menu';
 
@@ -40,30 +28,31 @@ export default function Navbar() {
   }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-navy-800 bg-navy-900 text-white">
+    <header className="sticky top-0 z-30 border-b border-t-2 border-line border-t-gold-500 bg-white text-ink">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
-          className="flex items-center gap-2.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
+          className="flex shrink-0 items-center gap-2.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded bg-gold-500 text-navy-900">
+          <span className="flex h-9 w-9 items-center justify-center rounded bg-brand-600 text-white">
             <Shield className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span className="text-base font-bold tracking-tight">Digital Police Portal</span>
+          <span className="text-base font-bold tracking-tight text-brand-800">{SITE_NAME}</span>
         </Link>
 
-        <nav aria-label="Main navigation" className="hidden h-full items-stretch gap-6 md:flex">
-          {NAV_LINKS.map((link) => (
+        <nav aria-label="Main navigation" className="hidden h-full items-stretch gap-5 lg:flex xl:gap-7">
+          {MAIN_NAV.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               end={link.to === '/'}
               className={({ isActive }) =>
                 cx(
-                  'flex items-center border-b-2 px-1 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500',
+                  'flex items-center whitespace-nowrap border-b-2 px-0.5 text-sm font-medium transition-colors',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500',
                   isActive
-                    ? 'border-gold-500 text-white'
-                    : 'border-transparent text-slate-300 hover:text-white'
+                    ? 'border-brand-600 text-brand-700'
+                    : 'border-transparent text-slate-600 hover:border-line hover:text-brand-700'
                 )
               }
             >
@@ -73,15 +62,14 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button
-            as={Link}
-            to="/citizen/dashboard"
-            variant="accent"
-            size="sm"
-            className="hidden md:inline-flex"
-          >
-            Citizen Portal
-          </Button>
+          <div className="hidden items-center gap-2 lg:flex">
+            <Button as={Link} to={AUTH_LINKS.login} variant="secondary" size="sm" leftIcon={LogIn}>
+              Login
+            </Button>
+            <Button as={Link} to={AUTH_LINKS.register} variant="primary" size="sm" leftIcon={UserPlus}>
+              Register
+            </Button>
+          </div>
 
           <button
             type="button"
@@ -89,7 +77,7 @@ export default function Navbar() {
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
             aria-controls={MOBILE_MENU_ID}
-            className="rounded p-2 text-slate-200 transition-colors hover:bg-navy-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 md:hidden"
+            className="rounded p-2 text-slate-700 transition-colors hover:bg-brand-50 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 lg:hidden"
           >
             {menuOpen ? (
               <X className="h-6 w-6" aria-hidden="true" />
@@ -101,10 +89,10 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div id={MOBILE_MENU_ID} className="border-t border-navy-800 bg-navy-900 md:hidden">
-          <nav aria-label="Mobile navigation" className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
+        <div id={MOBILE_MENU_ID} className="border-t border-line bg-white lg:hidden">
+          <nav aria-label="Mobile navigation" className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
             <ul className="space-y-1">
-              {NAV_LINKS.map((link) => (
+              {MAIN_NAV.map((link) => (
                 <li key={link.to}>
                   <NavLink
                     to={link.to}
@@ -113,8 +101,8 @@ export default function Navbar() {
                       cx(
                         'block rounded border-l-2 px-3 py-2.5 text-sm font-medium transition-colors',
                         isActive
-                          ? 'border-gold-500 bg-navy-800 text-white'
-                          : 'border-transparent text-slate-300 hover:bg-navy-800 hover:text-white'
+                          ? 'border-gold-500 bg-brand-50 text-brand-700'
+                          : 'border-transparent text-slate-700 hover:bg-brand-50 hover:text-brand-700'
                       )
                     }
                   >
@@ -124,21 +112,14 @@ export default function Navbar() {
               ))}
             </ul>
 
-            <p className="mt-4 px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Portal previews (placeholders)
-            </p>
-            <ul className="mt-2 space-y-1">
-              {PORTAL_LINKS.map((link) => (
-                <li key={link.to}>
-                  <Link
-                    to={link.to}
-                    className="block rounded px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-navy-800 hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4">
+              <Button as={Link} to={AUTH_LINKS.login} variant="secondary" leftIcon={LogIn} fullWidth>
+                Login
+              </Button>
+              <Button as={Link} to={AUTH_LINKS.register} variant="primary" leftIcon={UserPlus} fullWidth>
+                Register
+              </Button>
+            </div>
           </nav>
         </div>
       )}

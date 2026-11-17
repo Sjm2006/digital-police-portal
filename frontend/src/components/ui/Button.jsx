@@ -9,19 +9,15 @@ const BASE =
 
 const VARIANTS = {
   primary:
-    'border border-transparent bg-navy-800 text-white hover:bg-navy-900 focus-visible:ring-navy-700',
+    'border border-transparent bg-brand-600 text-white hover:bg-brand-700 focus-visible:ring-brand-500',
   accent:
     'border border-transparent bg-gold-500 text-ink hover:bg-gold-400 focus-visible:ring-gold-600',
   secondary:
-    'border border-navy-800 bg-white text-navy-800 hover:bg-navy-50 focus-visible:ring-navy-700',
+    'border border-brand-600 bg-white text-brand-700 hover:bg-brand-50 focus-visible:ring-brand-500',
   ghost:
-    'border border-transparent bg-transparent text-navy-800 hover:bg-navy-50 focus-visible:ring-navy-700',
+    'border border-transparent bg-transparent text-brand-700 hover:bg-brand-50 focus-visible:ring-brand-500',
   danger:
     'border border-transparent bg-danger text-white hover:bg-red-800 focus-visible:ring-danger',
-  light:
-    'border border-transparent bg-white text-navy-800 hover:bg-navy-50 focus-visible:ring-white focus-visible:ring-offset-navy-800',
-  outlineLight:
-    'border border-white/40 bg-transparent text-white hover:bg-white/10 focus-visible:ring-white focus-visible:ring-offset-navy-800',
 };
 
 const SIZES = {

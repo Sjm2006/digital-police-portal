@@ -4,7 +4,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Institutional teal (kept under the "navy" name so existing components pick it up)
+        // Light institutional teal for the public site
+        brand: {
+          50: '#EEF6F5',
+          100: '#DDEDEB',
+          200: '#BDDBD7',
+          300: '#8FC0BB',
+          400: '#62A39C',
+          500: '#44888F'.replace('8F', '82'),
+          600: '#2F726C', // Primary button colour
+          700: '#265C57', // Button hover, link hover
+          800: '#1F4A46',
+          900: '#183A37',
+        },
+        // Deep teal kept only for the Phase 2 dashboard sidebars
         navy: {
           50: '#F0F5F4',
           100: '#DDE9E7',
@@ -14,23 +27,23 @@ export default {
           500: '#438078',
           600: '#356F69',
           700: '#2B625D',
-          800: '#245B57', // Primary Institutional Teal
-          900: '#194843', // Primary Hover / darker teal
+          800: '#245B57',
+          900: '#194843',
         },
-        // Muted brass (kept under the "gold" name)
+        // Muted brass: thin accents only
         gold: {
           50: '#FAF7F0',
           100: '#F3EDDD',
           200: '#E7DABA',
           300: '#D9C592',
           400: '#CDB47E',
-          500: '#C1A36A', // Muted Brass Accent
+          500: '#C1A36A',
           600: '#A88B53',
           700: '#876F3F',
           800: '#665330',
           900: '#463A22',
         },
-        surface: '#F3F5F4', // Main background
+        surface: '#F6F8F7', // Page background
         ink: '#29343A', // Main text
         muted: '#68747A', // Secondary text
         line: '#DCE2DF', // Borders
