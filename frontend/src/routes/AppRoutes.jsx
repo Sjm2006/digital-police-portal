@@ -1,39 +1,25 @@
+
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
-import { Compass, LogIn, UserPlus } from 'lucide-react';
+import { Compass } from 'lucide-react';
+
 import PublicLayout from '../layouts/PublicLayout';
 import CitizenLayout from '../layouts/CitizenLayout';
 import OfficerLayout from '../layouts/OfficerLayout';
 import AdminLayout from '../layouts/AdminLayout';
+
 import RoutePlaceholder from '../pages/RoutePlaceholder';
+import Complaints from '../pages/citizen/Complaints';
+
 import Home from '../pages/public/Home';
 import About from '../pages/public/About';
 import Services from '../pages/public/Services';
 import HowItWorks from '../pages/public/HowItWorks';
 import FAQ from '../pages/public/FAQ';
 import Contact from '../pages/public/Contact';
-import Button from '../components/ui/Button';
+import Login from '../pages/public/Login';
+import Register from '../pages/public/Register';
 
-// Login and Register stay as placeholders until Phase 5 (Authentication and Role Management).
-const AUTH_PLACEHOLDERS = [
-  {
-    path: 'login',
-    title: 'Login',
-    description: 'Sign in to your portal account.',
-    expectedPhase: 'Phase 5 (Authentication and Role Management)',
-    statusLabel: 'Not yet available',
-    heading: 'Login is not available yet',
-    icon: LogIn,
-  },
-  {
-    path: 'register',
-    title: 'Register',
-    description: 'Create a citizen account.',
-    expectedPhase: 'Phase 5 (Authentication and Role Management)',
-    statusLabel: 'Not yet available',
-    heading: 'Registration is not available yet',
-    icon: UserPlus,
-  },
-];
+import Button from '../components/ui/Button';
 
 const CITIZEN_PAGES = [
   {
@@ -41,7 +27,12 @@ const CITIZEN_PAGES = [
     title: 'Dashboard',
     description: 'Overview of your complaints and their progress.',
     expectedPhase: 'Phase 6',
-    plannedItems: ['Total complaints', 'Pending complaints', 'Resolved complaints', 'Recent complaints'],
+    plannedItems: [
+      'Total complaints',
+      'Pending complaints',
+      'Resolved complaints',
+      'Recent complaints',
+    ],
   },
   {
     path: 'complaints',
@@ -63,7 +54,12 @@ const OFFICER_PAGES = [
     title: 'Dashboard',
     description: 'Overview of your assigned complaints and activity.',
     expectedPhase: 'Phase 7',
-    plannedItems: ['Assigned complaints', 'Pending investigations', 'Resolved cases', 'Recent activity'],
+    plannedItems: [
+      'Assigned complaints',
+      'Pending investigations',
+      'Resolved cases',
+      'Recent activity',
+    ],
   },
   {
     path: 'complaints',
@@ -171,6 +167,7 @@ function NotFound() {
 export default function AppRoutes() {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route element={<PublicLayout />}>
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
@@ -178,20 +175,30 @@ export default function AppRoutes() {
         <Route path="how-it-works" element={<HowItWorks />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="contact" element={<Contact />} />
-        {renderPages('public', AUTH_PLACEHOLDERS)}
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 
+      {/* Citizen Routes */}
       <Route path="/citizen" element={<CitizenLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
-        {renderPages('citizen', CITIZEN_PAGES)}
+
+        {renderPages(
+          'citizen',
+          CITIZEN_PAGES.filter((page) => page.path !== 'complaints')
+        )}
+
+        <Route path="complaints" element={<Complaints />} />
       </Route>
 
+      {/* Officer Routes */}
       <Route path="/officer" element={<OfficerLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
         {renderPages('officer', OFFICER_PAGES)}
       </Route>
 
+      {/* Admin Routes */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
         {renderPages('admin', ADMIN_PAGES)}
