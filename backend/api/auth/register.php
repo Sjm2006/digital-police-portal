@@ -1,5 +1,6 @@
 
 <?php
+
 require_once __DIR__ . '/../../bootstrap.php';
 require_once __DIR__ . '/../../helpers/auth.php';
 require_once __DIR__ . '/../../helpers/ids.php';
@@ -82,17 +83,19 @@ try {
 
     $profile->execute(['user_id' => $internalId]);
 
+    // Record audit event
     audit_log(
         $pdo,
         $internalId,
         'CITIZEN_REGISTERED',
         'USER',
         (string)$internalId,
-        null
+        []
     );
 
     $pdo->commit();
 
+    // Create authenticated session
     dpp_start_session();
     session_regenerate_id(true);
 
@@ -100,10 +103,13 @@ try {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
     dpp_ok('Registration successful.', [
-        'user_id' => $userId,
-        'full_name' => $name,
-        'email' => $email,
-        'role' => 'CITIZEN',
+        'user' => [
+            'user_id' => $userId,
+            'full_name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'role' => 'CITIZEN'
+        ],
         'csrf_token' => $_SESSION['csrf_token']
     ], 201);
 
