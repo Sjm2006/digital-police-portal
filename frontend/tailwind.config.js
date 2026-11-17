@@ -4,22 +4,46 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Institutional teal (kept under the "navy" name so existing components pick it up)
         navy: {
-          50: '#eef2f9', 100: '#d9e2f1', 200: '#b3c5e3', 300: '#7f9ccb',
-          400: '#4d71ad', 500: '#2d5090', 600: '#1e3a72', 700: '#162d5a',
-          800: '#102246', 900: '#0b1a37', 950: '#071023',
+          50: '#F0F5F4',
+          100: '#DDE9E7',
+          200: '#BBD2CF',
+          300: '#8FB5B0',
+          400: '#5F918B',
+          500: '#438078',
+          600: '#356F69',
+          700: '#2B625D',
+          800: '#245B57', // Primary Institutional Teal
+          900: '#194843', // Primary Hover / darker teal
         },
-        gold: { 50: '#fbf7ec', 100: '#f4ebcf', 300: '#dcc27a', 500: '#b8963e', 600: '#9a7c2e', 700: '#7a6024' },
-        surface: '#f5f6f8',
-        success: { 50: '#ecf7f0', 600: '#1f7a4a', 700: '#176039' },
-        warning: { 50: '#fff6e5', 600: '#b7791f', 700: '#8f5d15' },
-        danger: { 50: '#fbeeee', 600: '#b03a3a', 700: '#8d2e2e' },
+        // Muted brass (kept under the "gold" name)
+        gold: {
+          50: '#FAF7F0',
+          100: '#F3EDDD',
+          200: '#E7DABA',
+          300: '#D9C592',
+          400: '#CDB47E',
+          500: '#C1A36A', // Muted Brass Accent
+          600: '#A88B53',
+          700: '#876F3F',
+          800: '#665330',
+          900: '#463A22',
+        },
+        surface: '#F3F5F4', // Main background
+        ink: '#29343A', // Main text
+        muted: '#68747A', // Secondary text
+        line: '#DCE2DF', // Borders
+        success: '#28734F',
+        warning: '#A56B22',
+        danger: '#A94343',
+        info: '#426F91',
       },
       fontFamily: {
-        sans: ['Manrope', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Manrope', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        card: '0 1px 2px rgba(11, 26, 55, 0.06)',
+        card: '0 1px 2px rgba(41, 52, 58, 0.05), 0 1px 3px rgba(41, 52, 58, 0.08)',
       },
     },
   },

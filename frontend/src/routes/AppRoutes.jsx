@@ -1,5 +1,5 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
-import { Compass } from 'lucide-react';
+import { Compass, LogIn, UserPlus } from 'lucide-react';
 import PublicLayout from '../layouts/PublicLayout';
 import CitizenLayout from '../layouts/CitizenLayout';
 import OfficerLayout from '../layouts/OfficerLayout';
@@ -28,10 +28,40 @@ const PUBLIC_PAGES = [
     expectedPhase: 'Phase 3',
   },
   {
+    path: 'how-it-works',
+    title: 'How It Works',
+    description: 'The complaint management process, step by step.',
+    expectedPhase: 'Phase 3',
+  },
+  {
+    path: 'faq',
+    title: 'FAQ',
+    description: 'Frequently asked questions about the portal.',
+    expectedPhase: 'Phase 3',
+  },
+  {
     path: 'contact',
     title: 'Contact',
     description: 'Ways to get in touch with the project team.',
     expectedPhase: 'Phase 3',
+  },
+  {
+    path: 'login',
+    title: 'Login',
+    description: 'Sign in to your portal account.',
+    expectedPhase: 'Phase 5 (Authentication and Role Management)',
+    statusLabel: 'Not yet available',
+    heading: 'Login is not available yet',
+    icon: LogIn,
+  },
+  {
+    path: 'register',
+    title: 'Register',
+    description: 'Create a citizen account.',
+    expectedPhase: 'Phase 5 (Authentication and Role Management)',
+    statusLabel: 'Not yet available',
+    heading: 'Registration is not available yet',
+    icon: UserPlus,
   },
 ];
 

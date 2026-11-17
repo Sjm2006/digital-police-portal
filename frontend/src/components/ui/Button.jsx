@@ -11,13 +11,17 @@ const VARIANTS = {
   primary:
     'border border-transparent bg-navy-800 text-white hover:bg-navy-900 focus-visible:ring-navy-700',
   accent:
-    'border border-transparent bg-gold-500 text-navy-900 hover:bg-gold-600 focus-visible:ring-gold-500',
+    'border border-transparent bg-gold-500 text-ink hover:bg-gold-400 focus-visible:ring-gold-600',
   secondary:
-    'border border-slate-300 bg-white text-navy-800 hover:bg-slate-50 focus-visible:ring-navy-700',
+    'border border-navy-800 bg-white text-navy-800 hover:bg-navy-50 focus-visible:ring-navy-700',
   ghost:
     'border border-transparent bg-transparent text-navy-800 hover:bg-navy-50 focus-visible:ring-navy-700',
   danger:
-    'border border-transparent bg-red-700 text-white hover:bg-red-800 focus-visible:ring-red-600',
+    'border border-transparent bg-danger text-white hover:bg-red-800 focus-visible:ring-danger',
+  light:
+    'border border-transparent bg-white text-navy-800 hover:bg-navy-50 focus-visible:ring-white focus-visible:ring-offset-navy-800',
+  outlineLight:
+    'border border-white/40 bg-transparent text-white hover:bg-white/10 focus-visible:ring-white focus-visible:ring-offset-navy-800',
 };
 
 const SIZES = {
