@@ -90,7 +90,7 @@ audit_log(
     'USER_LOGIN',
     'USER',
     (string)$user['id'],
-    null
+    []
 );
 
 // Create authenticated session
