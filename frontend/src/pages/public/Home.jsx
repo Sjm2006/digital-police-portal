@@ -5,13 +5,15 @@ import {
   Bell,
   CheckCircle2,
   ClipboardList,
-  Eye,
+  FileCheck,
   FileText,
-  Hash,
-  Paperclip,
   Search,
   ShieldCheck,
   UserPlus,
+  Users,
+  Eye,
+  LockKeyhole,
+  Landmark,
 } from 'lucide-react';
 
 import usePageTitle from '../../hooks/usePageTitle';
@@ -27,104 +29,78 @@ import Badge from '../../components/ui/Badge';
 const REGISTER_PATH = '/register';
 const TRACK_PATH = '/citizen/complaints';
 
-const JOURNEY = [
-  { icon: FileText, label: 'Complaint submitted by citizen' },
-  { icon: ClipboardList, label: 'Complaint reviewed by authorised personnel' },
-  { icon: CheckCircle2, label: 'Complaint status updated' },
-  { icon: Bell, label: 'Citizen receives a status notification' },
-];
-
-const FEATURES = [
+const SERVICES = [
   {
     icon: FileText,
-    title: 'Online Complaint Management',
+    title: 'Online Complaint Registration',
     description:
-      'Submit complaint information through a structured digital process and maintain an organised record.',
+      'Submit complaint details through the citizen portal using a structured online process.',
   },
   {
     icon: Search,
     title: 'Complaint Status Tracking',
     description:
-      'Access submitted complaint information and follow its progress through the citizen portal.',
+      'Access your registered complaints and view available progress updates.',
   },
   {
-    icon: Paperclip,
-    title: 'Document and Evidence Upload',
+    icon: FileCheck,
+    title: 'Document Submission',
     description:
-      'Upload supporting documents and relevant evidence for the applicable verification and complaint processes.',
+      'Submit supporting documents for applicable registration and complaint processes.',
   },
   {
-    icon: Eye,
-    title: 'Transparent Case Updates',
+    icon: Users,
+    title: 'Citizen Account Services',
     description:
-      'View complaint status changes and relevant updates through your registered citizen account.',
+      'Create and manage your citizen account to access available portal services.',
   },
 ];
 
 const STEPS = [
   {
     icon: UserPlus,
-    title: 'Create a citizen account',
+    title: 'Citizen Registration',
     description:
-      'Register with your basic details and provide the required information for account verification.',
+      'Create an account by providing the required personal and contact information.',
   },
   {
     icon: FileText,
-    title: 'Submit complaint details',
+    title: 'Complaint Submission',
     description:
-      'Enter the incident information and provide relevant supporting documents where applicable.',
-  },
-  {
-    icon: Hash,
-    title: 'Receive a reference ID',
-    description:
-      'A unique complaint reference helps identify and follow your submitted complaint.',
+      'Enter the relevant incident details and attach supporting documents where applicable.',
   },
   {
     icon: ClipboardList,
-    title: 'Review and processing',
+    title: 'Review and Processing',
     description:
-      'The complaint can be reviewed and managed by authorised officers and administrators.',
+      'Submitted complaints can be reviewed and managed by authorised portal personnel.',
   },
   {
     icon: Bell,
-    title: 'Receive notifications',
+    title: 'Status Updates',
     description:
-      'Stay informed about relevant changes to your complaint status.',
-  },
-  {
-    icon: Search,
-    title: 'Follow complaint progress',
-    description:
-      'Return to your citizen account to view complaint details and available status updates.',
+      'Check your account for available complaint progress and status notifications.',
   },
 ];
 
 const OBJECTIVES = [
   {
-    title: 'Accessible citizen services',
+    icon: ShieldCheck,
+    title: 'Citizen-focused services',
     description:
-      'Provide a convenient digital interface for citizens to access the portal and its available services.',
+      'Provide a convenient digital interface for accessing available citizen services.',
   },
   {
-    title: 'Organised complaint records',
+    icon: Eye,
+    title: 'Greater visibility',
     description:
-      'Maintain structured complaint information to support easier review and management.',
+      'Enable citizens to view complaint records and available status updates.',
   },
   {
+    icon: LockKeyhole,
     title: 'Account and document verification',
     description:
-      'Support citizen registration and the submission of documents for verification.',
-  },
-  {
-    title: 'Improved complaint visibility',
-    description:
-      'Allow citizens to view available complaint information and follow status changes.',
-  },
-  {
-    title: 'Role-based portal access',
-    description:
-      'Provide separate working areas for citizens, police officers and administrators.',
+      'Support account verification and secure handling of submitted documents.',
   },
 ];
 
@@ -133,146 +109,220 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero */}
-      <Section spacing="lg" labelledBy="hero-heading">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <div className="flex flex-wrap items-center gap-3">
-              <Badge variant="gold" dot>
-                Academic Project Prototype
-              </Badge>
-              <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
-                Citizen Service Portal
-              </span>
+      {/* Government-style information strip */}
+      <div className="border-b border-slate-200 bg-slate-100">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2 text-xs text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <p className="font-medium">
+            Digital Police Portal | Citizen Service Platform
+          </p>
+          <p>
+            Educational Project Prototype — Not an Official Government Website
+          </p>
+        </div>
+      </div>
+
+      {/* Official-style identity banner */}
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <div className="flex items-center gap-4">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50">
+              <Landmark className="h-9 w-9 text-brand-800" />
             </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-600">
+                Citizen Service Portal
+              </p>
+              <h1 className="mt-1 text-xl font-extrabold tracking-tight text-brand-800 sm:text-2xl">
+                DIGITAL POLICE PORTAL
+              </h1>
+              <p className="mt-1 text-sm text-slate-600">
+                A Digital Platform for Citizen Police Services
+              </p>
+            </div>
+          </div>
 
-            <h1
-              id="hero-heading"
-              className="mt-6 max-w-2xl text-4xl font-bold leading-tight tracking-tight text-brand-800 sm:text-5xl lg:text-6xl"
+          <div className="flex flex-wrap gap-3">
+            <Button
+              as={Link}
+              to={REGISTER_PATH}
+              size="md"
+              rightIcon={ArrowRight}
             >
-              A Digital Approach to
-              <span className="block text-brand-600">
-                Citizen Police Services.
-              </span>
-            </h1>
+              Citizen Registration
+            </Button>
+            <Button
+              as={Link}
+              to={TRACK_PATH}
+              size="md"
+              variant="secondary"
+              leftIcon={Search}
+            >
+              Track Complaint
+            </Button>
+          </div>
+        </div>
+      </section>
 
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
+      {/* Main introduction */}
+      <Section spacing="lg" labelledBy="hero-heading">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="lg:col-span-7">
+            <Badge variant="gold" dot>
+              Citizen Services
+            </Badge>
+
+            <h2
+              id="hero-heading"
+              className="mt-5 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight text-brand-800 sm:text-5xl"
+            >
+              Serving Citizens Through
+              <span className="block text-brand-600">
+                Digital Police Services
+              </span>
+            </h2>
+
+            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
               The Digital Police Portal is an academic project prototype
-              designed to bring citizen registration, complaint management,
-              document submission and complaint status tracking together
-              through a unified digital platform.
+              designed to provide a unified digital interface for citizen
+              registration, online complaint submission, document
+              verification and complaint status tracking.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-wrap gap-3">
               <Button
                 as={Link}
                 to={REGISTER_PATH}
                 size="lg"
                 rightIcon={ArrowRight}
               >
-                Create Citizen Account
+                Register as a Citizen
               </Button>
 
               <Button
                 as={Link}
                 to={TRACK_PATH}
-                variant="secondary"
                 size="lg"
+                variant="secondary"
                 leftIcon={Search}
               >
-                Access Complaints
+                View Complaints
               </Button>
             </div>
 
-            <div className="mt-7 flex items-start gap-3 border-t border-line pt-5">
-              <ShieldCheck
-                className="mt-0.5 h-5 w-5 shrink-0 text-brand-600"
-                aria-hidden="true"
-              />
-              <p className="max-w-lg text-sm leading-relaxed text-slate-500">
-                Developed for educational and demonstration purposes.
-                This portal is not an official Government of India or
-                State Police website.
+            <div className="mt-8 border-l-4 border-brand-500 bg-slate-50 p-4">
+              <p className="text-sm leading-relaxed text-slate-600">
+                <strong className="text-brand-800">Important:</strong>{' '}
+                This platform is developed for academic and demonstration
+                purposes. It is not affiliated with the Government of India
+                or any State Police Department.
               </p>
             </div>
           </div>
 
-          {/* Complaint workflow panel */}
-          <div className="relative">
-            <div className="absolute -inset-3 rounded-lg bg-brand-50/70" />
-
-            <div className="relative rounded-lg border border-line bg-white p-6 shadow-card sm:p-8">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-5">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
-                    Service workflow
-                  </p>
-                  <h2 className="mt-1 text-xl font-bold text-brand-800">
-                    Complaint Management
-                  </h2>
-                </div>
-
-                <Badge size="sm">Portal overview</Badge>
+          {/* Citizen service information panel */}
+          <div className="lg:col-span-5">
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-card">
+              <div className="bg-brand-800 px-6 py-5 text-white">
+                <p className="text-xs font-semibold uppercase tracking-widest text-white/70">
+                  Citizen Information
+                </p>
+                <h3 className="mt-2 text-xl font-bold">
+                  Access Portal Services
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/80">
+                  Use the available services to manage your citizen account
+                  and complaint information.
+                </p>
               </div>
 
-              <ol className="mt-7 space-y-5">
-                {JOURNEY.map(({ icon: Icon, label }, index) => (
-                  <li key={label} className="flex items-center gap-4">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
-                      <Icon className="h-5 w-5" aria-hidden="true" />
+              <div className="divide-y divide-slate-100">
+                <Link
+                  to={REGISTER_PATH}
+                  className="flex items-center gap-4 p-5 transition hover:bg-slate-50"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-brand-600">
+                    <UserPlus className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-semibold text-brand-800">
+                      New Citizen Registration
                     </span>
+                    <span className="mt-1 block text-sm text-slate-500">
+                      Create a citizen portal account
+                    </span>
+                  </span>
+                  <ArrowRight className="h-5 w-5 text-slate-400" />
+                </Link>
 
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                        Stage {String(index + 1).padStart(2, '0')}
-                      </p>
-                      <p className="mt-0.5 text-sm font-semibold leading-relaxed text-ink">
-                        {label}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
+                <Link
+                  to={TRACK_PATH}
+                  className="flex items-center gap-4 p-5 transition hover:bg-slate-50"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-brand-700">
+                    <Search className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-semibold text-brand-800">
+                      Complaint Tracking
+                    </span>
+                    <span className="mt-1 block text-sm text-slate-500">
+                      Access your complaint information
+                    </span>
+                  </span>
+                  <ArrowRight className="h-5 w-5 text-slate-400" />
+                </Link>
 
-              <div className="mt-7 rounded-md bg-slate-50 p-4">
-                <p className="text-xs leading-relaxed text-slate-600">
-                  This workflow represents the intended complaint
-                  management process within the academic prototype.
-                </p>
+                <Link
+                  to="/how-it-works"
+                  className="flex items-center gap-4 p-5 transition hover:bg-slate-50"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-brand-800">
+                    <ClipboardList className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-semibold text-brand-800">
+                      Service Guidelines
+                    </span>
+                    <span className="mt-1 block text-sm text-slate-500">
+                      Understand the portal process
+                    </span>
+                  </span>
+                  <ArrowRight className="h-5 w-5 text-slate-400" />
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </Section>
 
-      {/* Portal services */}
-      <Section tone="white" labelledBy="overview-heading">
+      {/* Services directory */}
+      <Section tone="white" labelledBy="services-heading">
         <SectionHeading
-          id="overview-heading"
-          eyebrow="Portal services"
-          title="Digital services in one place"
-          description="Explore the key service areas developed as part of the Digital Police Portal project."
+          id="services-heading"
+          eyebrow="Citizen service directory"
+          title="Services Available on the Portal"
+          description="Access the digital services provided through this academic project prototype."
         />
 
         <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURES.map((feature) => (
-            <li key={feature.title}>
-              <FeatureCard {...feature} badge="Portal module" />
+          {SERVICES.map((service) => (
+            <li key={service.title}>
+              <FeatureCard {...service} badge="Citizen Service" />
             </li>
           ))}
         </ul>
       </Section>
 
-      {/* How it works */}
-      <Section labelledBy="steps-heading">
+      {/* Process */}
+      <Section labelledBy="process-heading">
         <SectionHeading
-          id="steps-heading"
-          eyebrow="Service process"
-          title="How the portal works"
-          description="A structured process that connects citizen registration, complaint submission and complaint management."
+          id="process-heading"
+          eyebrow="Service delivery process"
+          title="How to Use the Portal"
+          description="Follow these steps to access the available citizen services."
         />
 
-        <ol className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <ol className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step, index) => (
             <ProcessStep
               key={step.title}
@@ -289,58 +339,67 @@ export default function Home() {
             variant="secondary"
             rightIcon={ArrowRight}
           >
-            Explore the Complete Process
+            Read Service Guidelines
           </Button>
         </div>
       </Section>
 
-      {/* Project objectives */}
-      <Section tone="white" labelledBy="why-heading">
+      {/* Public information */}
+      <Section tone="white" labelledBy="information-heading">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <SectionHeading
-              id="why-heading"
-              eyebrow="Project objectives"
-              title="Building a more organised digital service experience"
-              description="The project focuses on improving the accessibility, organisation and visibility of citizen-facing complaint management services."
+              id="information-heading"
+              eyebrow="Public information"
+              title="A Structured Digital Service Environment"
+              description="The portal is designed around accessibility, organised records and role-based access to citizen service functions."
             />
           </div>
 
-          <ul className="space-y-6 lg:col-span-7">
-            {OBJECTIVES.map((item) => (
-              <li key={item.title} className="flex gap-4">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50">
-                  <CheckCircle2
-                    className="h-5 w-5 text-brand-600"
-                    aria-hidden="true"
-                  />
-                </span>
+          <div className="space-y-6 lg:col-span-7">
+            {OBJECTIVES.map((item) => {
+              const Icon = item.icon;
 
-                <div>
-                  <h3 className="text-base font-semibold text-brand-800">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-600">
-                    {item.description}
-                  </p>
+              return (
+                <div key={item.title} className="flex gap-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 className="font-bold text-brand-800">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
-              </li>
-            ))}
-          </ul>
+              );
+            })}
+          </div>
         </div>
       </Section>
 
-      {/* Emergency information */}
-      <Section spacing="sm">
-        <EmergencyNotice />
+      {/* Citizen safety information */}
+      <Section labelledBy="safety-heading">
+        <SectionHeading
+          id="safety-heading"
+          eyebrow="Citizen awareness"
+          title="Safety and Emergency Information"
+          description="Stay informed and use appropriate emergency services when immediate assistance is required."
+        />
+
+        <div className="mt-8">
+          <EmergencyNotice />
+        </div>
       </Section>
 
-      {/* Final call to action */}
-      <Section labelledBy="cta-heading" spacing="md">
+      {/* Final citizen access */}
+      <Section spacing="md" labelledBy="cta-heading">
         <CallToAction
           id="cta-heading"
-          title="Access the Digital Police Portal"
-          description="Create a citizen account to explore the available services and access your complaint information through the portal."
+          title="Access Citizen Portal Services"
+          description="Register for a citizen account to explore the available digital services and access your complaint information."
         >
           <Button
             as={Link}
@@ -348,7 +407,7 @@ export default function Home() {
             size="lg"
             rightIcon={ArrowRight}
           >
-            Register as a Citizen
+            Citizen Registration
           </Button>
 
           <Button
@@ -357,7 +416,7 @@ export default function Home() {
             variant="secondary"
             size="lg"
           >
-            Learn More About the Portal
+            Portal Information
           </Button>
         </CallToAction>
       </Section>
