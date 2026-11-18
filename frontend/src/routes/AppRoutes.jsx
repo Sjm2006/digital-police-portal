@@ -1,7 +1,10 @@
 
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import { Compass } from 'lucide-react';
+<<<<<<< HEAD
 
+=======
+>>>>>>> c924c3cc430fc8982a6b4bca63681bf4874498b9
 import PublicLayout from '../layouts/PublicLayout';
 import CitizenLayout from '../layouts/CitizenLayout';
 import OfficerLayout from '../layouts/OfficerLayout';
@@ -19,6 +22,7 @@ import Contact from '../pages/public/Contact';
 import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
 
+<<<<<<< HEAD
 import Button from '../components/ui/Button';
 
 const CITIZEN_PAGES = [
@@ -35,6 +39,21 @@ const CITIZEN_PAGES = [
     ],
   },
   {
+=======
+// Public Pages
+import Register from '../pages/public/Register';
+import Login from '../pages/public/Login';
+
+// Portal Dashboards
+import CitizenDashboard from '../pages/citizen/Dashboard';
+import OfficerDashboard from '../pages/officer/Dashboard';
+import AdminDashboard from '../pages/admin/Dashboard';
+
+const AUTH_PLACEHOLDERS = []; 
+
+const CITIZEN_PAGES = [
+  {
+>>>>>>> c924c3cc430fc8982a6b4bca63681bf4874498b9
     path: 'complaints',
     title: 'My Complaints',
     description: 'Submit new complaints and track existing ones.',
@@ -50,6 +69,7 @@ const CITIZEN_PAGES = [
 
 const OFFICER_PAGES = [
   {
+<<<<<<< HEAD
     path: 'dashboard',
     title: 'Dashboard',
     description: 'Overview of your assigned complaints and activity.',
@@ -62,6 +82,8 @@ const OFFICER_PAGES = [
     ],
   },
   {
+=======
+>>>>>>> c924c3cc430fc8982a6b4bca63681bf4874498b9
     path: 'complaints',
     title: 'Assigned Complaints',
     description: 'Review and update the complaints assigned to you.',
@@ -75,21 +97,8 @@ const OFFICER_PAGES = [
   },
 ];
 
+// Removed 'dashboard' from here to avoid conflict with the real component
 const ADMIN_PAGES = [
-  {
-    path: 'dashboard',
-    title: 'Dashboard',
-    description: 'System-wide overview for administrators.',
-    expectedPhase: 'Phase 8',
-    plannedItems: [
-      'Total citizens',
-      'Total officers',
-      'Total complaints',
-      'Pending complaints',
-      'Resolved complaints',
-      'Recent activity',
-    ],
-  },
   {
     path: 'users',
     title: 'Users',
@@ -177,12 +186,18 @@ export default function AppRoutes() {
         <Route path="contact" element={<Contact />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+<<<<<<< HEAD
+=======
+        
+        {renderPages('public', AUTH_PLACEHOLDERS)}
+>>>>>>> c924c3cc430fc8982a6b4bca63681bf4874498b9
         <Route path="*" element={<NotFound />} />
       </Route>
 
       {/* Citizen Routes */}
       <Route path="/citizen" element={<CitizenLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
+<<<<<<< HEAD
 
         {renderPages(
           'citizen',
@@ -190,17 +205,27 @@ export default function AppRoutes() {
         )}
 
         <Route path="complaints" element={<Complaints />} />
+=======
+        <Route path="dashboard" element={<CitizenDashboard />} />
+        {renderPages('citizen', CITIZEN_PAGES)}
+>>>>>>> c924c3cc430fc8982a6b4bca63681bf4874498b9
       </Route>
 
       {/* Officer Routes */}
       <Route path="/officer" element={<OfficerLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<OfficerDashboard />} />
         {renderPages('officer', OFFICER_PAGES)}
       </Route>
 
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
+        
+        {/* Render Real Admin Dashboard */}
+        <Route path="dashboard" element={<AdminDashboard />} />
+        
+        {/* Render Placeholders for the rest */}
         {renderPages('admin', ADMIN_PAGES)}
       </Route>
     </Routes>
