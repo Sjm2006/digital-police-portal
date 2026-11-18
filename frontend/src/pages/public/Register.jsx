@@ -13,6 +13,9 @@ import {
   LoaderCircle,
   AlertCircle,
   CheckCircle2,
+  FileText,
+  Upload,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import usePageTitle from '../../hooks/usePageTitle';
@@ -30,6 +33,9 @@ export default function Register() {
     password: '',
     confirmPassword: '',
   });
+
+  const [documentType, setDocumentType] = useState('');
+  const [documentFile, setDocumentFile] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -53,6 +59,47 @@ export default function Register() {
     setForm((previous) => ({ ...previous, [name]: value }));
   }
 
+  function handleDocumentChange(event) {
+    setError('');
+
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      setDocumentFile(null);
+      return;
+    }
+
+    const allowedTypes = [
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setError('Only PDF, JPG and PNG documents are allowed.');
+      event.target.value = '';
+      setDocumentFile(null);
+      return;
+    }
+
+    if (file.size <= 0 || file.size > 5 * 1024 * 1024) {
+      setError('Document size must not exceed 5 MB.');
+      event.target.value = '';
+      setDocumentFile(null);
+      return;
+    }
+
+    setDocumentFile(file);
+  }
+
+  function removeDocument() {
+    setDocumentFile(null);
+    setDocumentType('');
+
+    const fileInput = document.getElementById('document');
+    if (fileInput) fileInput.value = '';
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
@@ -72,8 +119,17 @@ export default function Register() {
       return;
     }
 
-    if (form.password.length < 8) {
-      setError('Password must contain at least 8 characters.');
+    const passwordValid =
+      form.password.length >= 12 &&
+      /[A-Z]/.test(form.password) &&
+      /[a-z]/.test(form.password) &&
+      /\d/.test(form.password) &&
+      /[^A-Za-z0-9]/.test(form.password);
+
+    if (!passwordValid) {
+      setError(
+        'Password must contain at least 12 characters, uppercase, lowercase, a number and a symbol.'
+      );
       return;
     }
 
@@ -82,15 +138,27 @@ export default function Register() {
       return;
     }
 
+    if (documentFile && !documentType) {
+      setError('Please select your document type.');
+      return;
+    }
+
     setSubmitting(true);
 
     try {
-      await register({
-        full_name: form.full_name.trim(),
-        email: form.email.trim().toLowerCase(),
-        phone: form.phone.trim(),
-        password: form.password,
-      });
+      const payload = new FormData();
+
+      payload.append('full_name', form.full_name.trim());
+      payload.append('email', form.email.trim().toLowerCase());
+      payload.append('phone', form.phone.trim());
+      payload.append('password', form.password);
+
+      if (documentFile) {
+        payload.append('document_type', documentType);
+        payload.append('document', documentFile);
+      }
+
+      await register(payload);
 
       navigate('/citizen/dashboard', { replace: true });
     } catch (err) {
@@ -218,7 +286,7 @@ export default function Register() {
                   autoComplete="new-password"
                   value={form.password}
                   onChange={updateField}
-                  placeholder="Minimum 8 characters"
+                  placeholder="Minimum 12 characters"
                   className={`${inputClass} pr-12`}
                   disabled={submitting}
                   required
@@ -232,6 +300,9 @@ export default function Register() {
                   {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
                 </button>
               </div>
+              <p className="mt-2 text-xs text-slate-500">
+                Use uppercase, lowercase, a number and a symbol.
+              </p>
             </div>
 
             <div>
@@ -261,6 +332,100 @@ export default function Register() {
                   {showConfirmPassword ? <EyeOff size={19} /> : <Eye size={19} />}
                 </button>
               </div>
+            </div>
+
+            {/* Optional identity document upload */}
+            <div className="border-t border-slate-100 pt-5">
+              <div className="mb-3">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                  <FileText size={18} className="text-navy-700" />
+                  Identity Document Verification
+                  <span className="font-normal text-slate-400">(Optional)</span>
+                </h3>
+
+                <p className="mt-1 text-xs leading-5 text-slate-500">
+                  Upload an identity document to help verify your citizen account.
+                  Your document will be reviewed by an administrator.
+                </p>
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="documentType" className="mb-2 block text-sm font-medium text-slate-700">
+                  Document Type
+                </label>
+
+                <select
+                  id="documentType"
+                  value={documentType}
+                  onChange={(event) => setDocumentType(event.target.value)}
+                  disabled={submitting}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-navy-700 focus:ring-2 focus:ring-navy-700/10"
+                >
+                  <option value="">Select document type</option>
+                  <option value="AADHAAR">Aadhaar Card</option>
+                  <option value="PAN">PAN Card</option>
+                  <option value="VOTER_ID">Voter ID</option>
+                  <option value="DRIVING_LICENSE">Driving Licence</option>
+                  <option value="PASSPORT">Passport</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </div>
+
+              {!documentFile ? (
+                <label
+                  htmlFor="document"
+                  className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-navy-600 hover:bg-slate-100"
+                >
+                  <Upload className="mb-2 h-7 w-7 text-navy-700" />
+
+                  <span className="text-sm font-semibold text-slate-700">
+                    Click to upload identity document
+                  </span>
+
+                  <span className="mt-1 text-xs text-slate-500">
+                    PDF, JPG or PNG · Maximum 5 MB
+                  </span>
+
+                  <input
+                    id="document"
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                    onChange={handleDocumentChange}
+                    disabled={submitting}
+                    className="hidden"
+                  />
+                </label>
+              ) : (
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-green-200 bg-green-50 p-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <FileText className="h-7 w-7 shrink-0 text-green-700" />
+
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-green-800">
+                        {documentFile.name}
+                      </p>
+                      <p className="text-xs text-green-700">
+                        {(documentFile.size / (1024 * 1024)).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={removeDocument}
+                    disabled={submitting}
+                    aria-label="Remove uploaded document"
+                    className="rounded-lg p-2 text-red-600 transition hover:bg-red-100"
+                  >
+                    <X size={19} />
+                  </button>
+                </div>
+              )}
+
+              <p className="mt-2 text-xs text-slate-500">
+                Documents are optional during registration. If uploaded,
+                their verification status will initially be Pending.
+              </p>
             </div>
 
             <button

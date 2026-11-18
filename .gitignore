@@ -21,3 +21,10 @@ backend/storage/private/*
 # OS files
 .DS_Store
 Thumbs.db
+/backend/storage/private_documents/*
+!/backend/storage/private_documents/.htaccess
+
+/backend/storage/private_documents/*
+!/backend/storage/private_documents/.htaccess
+
+/frontend/dist/

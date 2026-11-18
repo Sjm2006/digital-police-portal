@@ -32,7 +32,7 @@ export default function DashboardHeader({
           aria-label="Open navigation menu"
           aria-expanded={isMenuOpen}
           aria-controls={menuControlsId}
-          className="rounded p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-navy-700 lg:hidden"
+          className="rounded p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -54,11 +54,7 @@ export default function DashboardHeader({
           Preview mode
         </Badge>
 
-        <Link
-          to="/"
-          aria-label="Back to public site"
-          className="inline-flex items-center gap-1.5 rounded px-2 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-navy-700"
-        >
+        <Link to="/" className="inline-flex items-center gap-1.5 rounded px-2 py-1.5 text-sm text-slate-600 hover:bg-slate-100">
           <Home className="h-4 w-4" aria-hidden="true" />
           <span className="hidden sm:inline">Public site</span>
         </Link>
@@ -66,7 +62,7 @@ export default function DashboardHeader({
         <button
           type="button"
           onClick={handleLogout}
-          className="inline-flex items-center gap-1.5 rounded px-2 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          className="inline-flex items-center gap-1.5 rounded px-2 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
         >
           <LogOut className="h-4 w-4" aria-hidden="true" />
           <span>Logout</span>
