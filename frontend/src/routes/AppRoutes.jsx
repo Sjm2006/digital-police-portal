@@ -1,4 +1,4 @@
-
+﻿
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import { Compass } from 'lucide-react';
 
@@ -8,7 +8,26 @@ import OfficerLayout from '../layouts/OfficerLayout';
 import AdminLayout from '../layouts/AdminLayout';
 
 import RoutePlaceholder from '../pages/RoutePlaceholder';
+
 import Complaints from '../pages/citizen/Complaints';
+import CitizenDashboard from '../pages/citizen/CitizenDashboard';
+import CitizenProfile from '../pages/citizen/CitizenProfile';
+
+import OfficerDashboard from '../pages/officer/OfficerDashboard';
+import OfficerComplaints from '../pages/officer/OfficerComplaints';
+import OfficerProfile from '../pages/officer/OfficerProfile';
+
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import ManageUsers from '../pages/admin/ManageUsers';
+import ManageOfficers from '../pages/admin/ManageOfficers';
+import AdminComplaints from '../pages/admin/AdminComplaints';
+
+import {
+  AdminCategories,
+  AdminStations,
+  AdminReports,
+  AdminSettings,
+} from '../pages/admin/AdminDemoPages';
 
 import Home from '../pages/public/Home';
 import About from '../pages/public/About';
@@ -21,6 +40,7 @@ import Register from '../pages/public/Register';
 
 import Button from '../components/ui/Button';
 
+// Citizen Pages
 const CITIZEN_PAGES = [
   {
     path: 'dashboard',
@@ -48,6 +68,7 @@ const CITIZEN_PAGES = [
   },
 ];
 
+// Officer Pages
 const OFFICER_PAGES = [
   {
     path: 'dashboard',
@@ -75,21 +96,8 @@ const OFFICER_PAGES = [
   },
 ];
 
+// Admin Pages
 const ADMIN_PAGES = [
-  {
-    path: 'dashboard',
-    title: 'Dashboard',
-    description: 'System-wide overview for administrators.',
-    expectedPhase: 'Phase 8',
-    plannedItems: [
-      'Total citizens',
-      'Total officers',
-      'Total complaints',
-      'Pending complaints',
-      'Resolved complaints',
-      'Recent activity',
-    ],
-  },
   {
     path: 'users',
     title: 'Users',
@@ -134,16 +142,23 @@ const ADMIN_PAGES = [
   },
 ];
 
+// Reusable Route Renderer
 const renderPages = (section, pages) =>
   pages.map(({ path, index, ...pageProps }) => (
     <Route
       key={path ?? 'index'}
       index={index}
       path={path}
-      element={<RoutePlaceholder section={section} {...pageProps} />}
+      element={
+        <RoutePlaceholder
+          section={section}
+          {...pageProps}
+        />
+      }
     />
   ));
 
+// 404 Page
 function NotFound() {
   return (
     <RoutePlaceholder
@@ -164,6 +179,7 @@ function NotFound() {
   );
 }
 
+// Main Application Routes
 export default function AppRoutes() {
   return (
     <Routes>
@@ -183,25 +199,66 @@ export default function AppRoutes() {
       {/* Citizen Routes */}
       <Route path="/citizen" element={<CitizenLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<CitizenDashboard />} />
+        <Route path="complaints" element={<Complaints />} />
+        <Route path="profile" element={<CitizenProfile />} />
 
         {renderPages(
           'citizen',
-          CITIZEN_PAGES.filter((page) => page.path !== 'complaints')
+          CITIZEN_PAGES.filter(
+            (page) =>
+              page.path !== 'dashboard' &&
+              page.path !== 'complaints' &&
+              page.path !== 'profile'
+          )
         )}
-
-        <Route path="complaints" element={<Complaints />} />
       </Route>
 
       {/* Officer Routes */}
       <Route path="/officer" element={<OfficerLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
-        {renderPages('officer', OFFICER_PAGES)}
+        <Route path="dashboard" element={<OfficerDashboard />} />
+        <Route path="complaints" element={<OfficerComplaints />} />
+        <Route path="profile" element={<OfficerProfile />} />
+
+        {renderPages(
+          'officer',
+          OFFICER_PAGES.filter(
+            (page) =>
+              page.path !== 'dashboard' &&
+              page.path !== 'complaints' &&
+              page.path !== 'profile'
+          )
+        )}
       </Route>
 
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
-        {renderPages('admin', ADMIN_PAGES)}
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="users" element={<ManageUsers />} />
+        <Route path="officers" element={<ManageOfficers />} />
+        <Route path="complaints" element={<AdminComplaints />} />
+
+        {/* Admin Demo Pages */}
+        <Route path="categories" element={<AdminCategories />} />
+        <Route path="stations" element={<AdminStations />} />
+        <Route path="reports" element={<AdminReports />} />
+        <Route path="settings" element={<AdminSettings />} />
+
+        {renderPages(
+          'admin',
+          ADMIN_PAGES.filter(
+            (page) =>
+              page.path !== 'users' &&
+              page.path !== 'officers' &&
+              page.path !== 'complaints' &&
+              page.path !== 'categories' &&
+              page.path !== 'stations' &&
+              page.path !== 'reports' &&
+              page.path !== 'settings'
+          )
+        )}
       </Route>
     </Routes>
   );

@@ -17,6 +17,16 @@ apiClient.interceptors.request.use((config) => {
     config.headers['X-CSRF-Token'] = csrfToken;
   }
 
+  // Handle multipart/form-data file uploads.
+  // The browser must set the multipart boundary automatically.
+  if (
+    typeof FormData !== 'undefined' &&
+    config.data instanceof FormData
+  ) {
+    delete config.headers['Content-Type'];
+    delete config.headers['content-type'];
+  }
+
   return config;
 });
 

@@ -1,13 +1,187 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html { scroll-behavior: smooth; }
-  body { @apply bg-surface font-sans text-navy-900 antialiased; }
-  :focus-visible { @apply outline-2 outline-offset-2 outline-gold-500; }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    background-color: #f5f7fa;
+    color: #183b63;
+  }
+
+  :focus-visible {
+    outline: 2px solid #e87519;
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: #fce3ce;
+    color: #183b63;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Public helpline ticker */
+
+.helpline-strip {
+  position: relative;
+  display: flex;
+  min-height: 43px;
+  align-items: center;
+  overflow: hidden;
+  background: #e87519;
+  color: #ffffff;
+}
+
+.helpline-inner {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+}
+
+.helpline-label {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 43px;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 9px;
+  padding: 0 18px;
+  background: #183b63;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  white-space: nowrap;
+}
+
+.helpline-live-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #f5a623;
+  box-shadow: 0 0 0 4px rgb(245 166 35 / 18%);
+}
+
+.helpline-viewport {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.helpline-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: helpline-scroll 36s linear infinite;
+  will-change: transform;
+}
+
+.helpline-viewport:hover .helpline-track,
+.helpline-viewport:focus-within .helpline-track {
+  animation-play-state: paused;
+}
+
+.helpline-item {
+  display: inline-flex;
+  min-height: 43px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 20px;
+  color: #ffffff;
+  font-size: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 150ms ease;
+}
+
+.helpline-item:hover {
+  background: rgb(24 59 99 / 15%);
+  color: #ffffff;
+}
+
+.helpline-item:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -4px;
+}
+
+.helpline-number {
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.helpline-description {
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.helpline-separator {
+  margin-left: 15px;
+  color: #ffe1a8;
+  font-size: 8px;
+}
+
+@keyframes helpline-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .helpline-label {
+    gap: 7px;
+    padding: 0 10px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+
+  .helpline-item {
+    gap: 7px;
+    padding: 0 13px;
+    font-size: 11px;
+  }
+
+  .helpline-number {
+    font-size: 13px;
+  }
+
+  .helpline-separator {
+    margin-left: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .helpline-track {
+    animation: none;
+  }
+
+  .helpline-viewport {
+    overflow-x: auto;
   }
 }

@@ -4,12 +4,14 @@
 require_once __DIR__ . '/../../bootstrap.php';
 require_once __DIR__ . '/../../helpers/auth.php';
 require_once __DIR__ . '/../../helpers/audit.php';
+require_once __DIR__ . '/../../services/email.php';
 
 $pdo = db();
 $user = dpp_require_role($pdo, 'CITIZEN');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Retrieve complaints belonging to the logged-in citizen.
 if ($method === 'GET') {
     $stmt = $pdo->prepare(
         "SELECT
@@ -38,6 +40,7 @@ if ($method === 'GET') {
     );
 }
 
+// Only GET and POST methods are allowed.
 if ($method !== 'POST') {
     dpp_fail('Method not allowed.', 405);
 }
@@ -56,14 +59,17 @@ $description = trim((string)($data['description'] ?? ''));
 $incidentDate = trim((string)($data['incident_date'] ?? ''));
 $location = trim((string)($data['incident_location'] ?? ''));
 
+// Validate complaint category.
 if (!$categoryId || $categoryId < 1) {
     dpp_fail('Please select a valid complaint category.', 422);
 }
 
+// Validate subject.
 if (mb_strlen($subject) < 5 || mb_strlen($subject) > 200) {
     dpp_fail('Subject must contain between 5 and 200 characters.', 422);
 }
 
+// Validate description.
 if (mb_strlen($description) < 20) {
     dpp_fail('Please provide at least 20 characters in the description.', 422);
 }
@@ -72,10 +78,12 @@ if (mb_strlen($description) > 10000) {
     dpp_fail('Complaint description is too long.', 422);
 }
 
+// Validate incident location.
 if ($location === '' || mb_strlen($location) > 255) {
     dpp_fail('Please enter a valid incident location.', 422);
 }
 
+// Validate incident date.
 $date = DateTime::createFromFormat('!Y-m-d', $incidentDate);
 
 if (!$date || $date->format('Y-m-d') !== $incidentDate) {
@@ -86,6 +94,7 @@ if ($incidentDate > date('Y-m-d')) {
     dpp_fail('Incident date cannot be in the future.', 422);
 }
 
+// Verify that the selected category is active.
 $category = $pdo->prepare(
     'SELECT id FROM complaint_categories
      WHERE id = :id AND is_active = 1'
@@ -100,10 +109,12 @@ if (!$category->fetch()) {
 try {
     $pdo->beginTransaction();
 
+    // Generate a unique yearly complaint reference number.
     $year = (int)date('Y');
 
     $sequence = $pdo->prepare(
-        "INSERT IGNORE INTO complaint_sequences (seq_year, last_number)
+        "INSERT IGNORE INTO complaint_sequences
+         (seq_year, last_number)
          VALUES (:year, 0)"
     );
 
@@ -130,6 +141,7 @@ try {
 
     $reference = sprintf('DPP-%04d-%06d', $year, $number);
 
+    // Insert the complaint.
     $insert = $pdo->prepare(
         "INSERT INTO complaints
         (
@@ -167,6 +179,7 @@ try {
 
     $complaintId = (int)$pdo->lastInsertId();
 
+    // Insert initial complaint status history.
     $history = $pdo->prepare(
         "INSERT INTO complaint_updates
         (
@@ -193,13 +206,18 @@ try {
         'updated_by' => $user['id']
     ]);
 
+    // Create an in-app notification.
     $notification = $pdo->prepare(
         "INSERT INTO notifications
         (user_id, complaint_id, type, title, message)
         VALUES
-        (:user_id, :complaint_id, 'COMPLAINT_SUBMITTED',
-         'Complaint submitted',
-         :message)"
+        (
+            :user_id,
+            :complaint_id,
+            'COMPLAINT_SUBMITTED',
+            'Complaint submitted',
+            :message
+        )"
     );
 
     $notification->execute([
@@ -208,6 +226,7 @@ try {
         'message' => 'Your complaint ' . $reference . ' has been submitted.'
     ]);
 
+    // Record the action in the audit log.
     audit_log(
         $pdo,
         (int)$user['id'],
@@ -217,8 +236,25 @@ try {
         ['complaint_ref' => $reference]
     );
 
+    // Commit database operations first.
     $pdo->commit();
 
+    // Send acknowledgement email after successful submission.
+    // Email failure must never cancel the complaint submission.
+    try {
+        dpp_send_complaint_acknowledgement(
+            (string)($user['email'] ?? ''),
+            (string)($user['full_name'] ?? 'Citizen'),
+            $reference
+        );
+    } catch (Throwable $emailError) {
+        error_log(
+            'Complaint acknowledgement email error: '
+            . $emailError->getMessage()
+        );
+    }
+
+    // Return successful response to the frontend.
     dpp_ok('Complaint submitted successfully.', [
         'complaint_id' => $complaintId,
         'complaint_ref' => $reference,
@@ -226,6 +262,7 @@ try {
     ], 201);
 
 } catch (Throwable $e) {
+
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
