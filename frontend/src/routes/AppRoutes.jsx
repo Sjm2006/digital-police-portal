@@ -21,6 +21,8 @@ import Register from '../pages/public/Register';
 
 import CitizenDashboard from '../pages/citizen/Dashboard';
 import Complaints from '../pages/citizen/Complaints';
+import ComplaintDetails from '../pages/citizen/ComplaintDetails';
+
 import OfficerDashboard from '../pages/officer/Dashboard';
 import AdminDashboard from '../pages/admin/Dashboard';
 
@@ -148,6 +150,7 @@ export default function AppRoutes() {
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<CitizenDashboard />} />
         <Route path="complaints" element={<Complaints />} />
+        <Route path="complaints/:ref" element={<ComplaintDetails />} />
         {renderPages('citizen', CITIZEN_PAGES)}
       </Route>
 
