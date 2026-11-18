@@ -1,10 +1,21 @@
-
 import { useEffect, useState } from 'react';
 import {
-  User, Mail, Phone, Shield, Building2, MapPin,
-  Calendar, Clock, Lock, Save, RefreshCw
+  User,
+  Mail,
+  Phone,
+  Shield,
+  Building2,
+  MapPin,
+  Calendar,
+  Clock,
+  Lock,
+  Save,
+  RefreshCw,
 } from 'lucide-react';
 import apiClient from '../../services/apiClient';
+
+const inputClass =
+  'w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100';
 
 export default function OfficerProfile() {
   const [profile, setProfile] = useState(null);
@@ -41,8 +52,8 @@ export default function OfficerProfile() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        err.message ||
-        'Failed to load profile.'
+          err.message ||
+          'Failed to load profile.'
       );
     } finally {
       setLoading(false);
@@ -102,8 +113,7 @@ export default function OfficerProfile() {
       await loadProfile();
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-        'Unable to update profile.'
+        err.response?.data?.message || 'Unable to update profile.'
       );
     } finally {
       setSaving(false);
@@ -116,21 +126,19 @@ export default function OfficerProfile() {
   };
 
   const Field = ({ label, value, icon: Icon }) => (
-    <div className="rounded-xl border border-gray-200 p-4">
-      <div className="mb-2 flex items-center gap-2 text-sm text-gray-500">
-        <Icon size={16} />
+    <div className="rounded-lg border border-slate-200 bg-slate-50/40 p-3">
+      <div className="mb-1 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-slate-500">
+        <Icon size={13} />
         {label}
       </div>
-      <p className="font-medium text-gray-800">
-        {value || 'Not available'}
-      </p>
+      <p className="text-sm text-slate-800">{value || 'Not available'}</p>
     </div>
   );
 
   if (loading) {
     return (
-      <div className="flex min-h-64 items-center justify-center gap-2 text-gray-600">
-        <RefreshCw className="animate-spin" size={20} />
+      <div className="flex min-h-64 items-center justify-center gap-2 text-sm text-slate-500">
+        <RefreshCw className="animate-spin" size={18} />
         Loading officer profile...
       </div>
     );
@@ -138,12 +146,9 @@ export default function OfficerProfile() {
 
   if (!profile) {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-5 text-red-700">
+      <div className="rounded-xl border border-rose-200 bg-rose-50/70 p-5 text-sm text-rose-700">
         {error || 'Officer profile could not be loaded.'}
-        <button
-          onClick={loadProfile}
-          className="ml-3 font-semibold underline"
-        >
+        <button onClick={loadProfile} className="ml-3 font-semibold underline">
           Retry
         </button>
       </div>
@@ -151,64 +156,69 @@ export default function OfficerProfile() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="mx-auto max-w-6xl space-y-5">
+      {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
           Officer Profile
         </h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-slate-500">
           View your official information and manage your account.
         </p>
       </div>
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-lg border border-rose-200 bg-rose-50/70 p-3 text-sm text-rose-700">
           {error}
         </div>
       )}
 
       {message && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50/70 p-3 text-sm text-emerald-700">
           {message}
         </div>
       )}
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      {/* Account summary */}
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-700">
-            <Shield size={30} />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+            <Shield size={26} />
           </div>
 
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-lg font-semibold text-slate-900">
               {profile.full_name}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs text-slate-500">
               {profile.designation || 'Police Officer'}
             </p>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-0.5 text-xs text-slate-500">
               Officer ID: {profile.user_id}
             </p>
           </div>
 
           <div className="sm:ml-auto">
-            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
-              profile.status === 'ACTIVE'
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
-            }`}>
+            <span
+              className={`rounded-md px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
+                profile.status === 'ACTIVE'
+                  ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
+                  : 'bg-rose-50 text-rose-700 ring-rose-200'
+              }`}
+            >
               {profile.status}
             </span>
           </div>
         </div>
       </div>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-5 text-lg font-semibold text-gray-900">
+      {/* Official Information */}
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs">
+        <h2 className="mb-3 text-sm font-semibold text-slate-900">
           Official Information
         </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <Field label="Officer ID" value={profile.user_id} icon={Shield} />
           <Field label="Designation" value={profile.designation} icon={User} />
           <Field label="Department" value={profile.department} icon={Building2} />
@@ -226,12 +236,13 @@ export default function OfficerProfile() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-5 text-lg font-semibold text-gray-900">
+      {/* Account Information */}
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs">
+        <h2 className="mb-3 text-sm font-semibold text-slate-900">
           Account Information
         </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <Field
             label="Account Created"
             value={formatDate(profile.created_at)}
@@ -245,22 +256,24 @@ export default function OfficerProfile() {
         </div>
       </section>
 
+      {/* Edit form */}
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+        className="space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-xs"
       >
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-sm font-semibold text-slate-900">
             Edit Personal Information
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Your official designation and police station are managed by the administrator.
+          <p className="mt-0.5 text-xs text-slate-500">
+            Your official designation and police station are managed by the
+            administrator.
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-xs font-medium text-slate-600">
               Full Name
             </label>
             <input
@@ -268,23 +281,23 @@ export default function OfficerProfile() {
               value={form.full_name}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+              className={inputClass}
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-xs font-medium text-slate-600">
               Email Address
             </label>
             <input
               value={profile.email || ''}
               disabled
-              className="w-full rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 text-gray-500"
+              className={`${inputClass} cursor-not-allowed bg-slate-100 text-slate-500`}
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-xs font-medium text-slate-600">
               Phone Number
             </label>
             <input
@@ -292,22 +305,23 @@ export default function OfficerProfile() {
               value={form.phone}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+              className={inputClass}
             />
           </div>
         </div>
 
-        <div className="border-t border-gray-200 pt-5">
-          <h3 className="mb-1 font-semibold text-gray-900">
+        <div className="border-t border-slate-100 pt-4">
+          <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold text-slate-900">
+            <Lock size={15} className="text-slate-500" />
             Change Password
           </h3>
-          <p className="mb-4 text-sm text-gray-500">
+          <p className="mb-3 text-xs text-slate-500">
             Leave these fields empty if you do not want to change your password.
           </p>
 
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-xs font-medium text-slate-600">
                 Current Password
               </label>
               <input
@@ -316,12 +330,12 @@ export default function OfficerProfile() {
                 value={form.current_password}
                 onChange={handleChange}
                 autoComplete="current-password"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+                className={inputClass}
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-xs font-medium text-slate-600">
                 New Password
               </label>
               <input
@@ -330,12 +344,12 @@ export default function OfficerProfile() {
                 value={form.new_password}
                 onChange={handleChange}
                 autoComplete="new-password"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+                className={inputClass}
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-xs font-medium text-slate-600">
                 Confirm New Password
               </label>
               <input
@@ -344,7 +358,7 @@ export default function OfficerProfile() {
                 value={form.confirm_password}
                 onChange={handleChange}
                 autoComplete="new-password"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+                className={inputClass}
               />
             </div>
           </div>
@@ -354,9 +368,9 @@ export default function OfficerProfile() {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-blue-700 px-6 py-3 font-semibold text-white hover:bg-blue-800 disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
           >
-            <Save size={18} />
+            <Save size={15} />
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
         </div>

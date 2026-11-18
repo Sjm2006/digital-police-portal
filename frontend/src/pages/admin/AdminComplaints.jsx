@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from 'react';
 import {
   Search,
@@ -35,16 +34,16 @@ const UPDATE_STATUSES = [
 
 const statusStyle = (status) => {
   const styles = {
-    SUBMITTED: 'bg-blue-100 text-blue-700',
-    UNDER_REVIEW: 'bg-amber-100 text-amber-700',
-    ASSIGNED: 'bg-purple-100 text-purple-700',
-    INVESTIGATION_IN_PROGRESS: 'bg-indigo-100 text-indigo-700',
-    RESOLVED: 'bg-green-100 text-green-700',
-    CLOSED: 'bg-slate-200 text-slate-700',
-    REJECTED: 'bg-red-100 text-red-700',
+    SUBMITTED: 'bg-blue-50 text-blue-700 ring-blue-200',
+    UNDER_REVIEW: 'bg-amber-50 text-amber-700 ring-amber-200',
+    ASSIGNED: 'bg-purple-50 text-purple-700 ring-purple-200',
+    INVESTIGATION_IN_PROGRESS: 'bg-indigo-50 text-indigo-700 ring-indigo-200',
+    RESOLVED: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+    CLOSED: 'bg-slate-100 text-slate-600 ring-slate-200',
+    REJECTED: 'bg-rose-50 text-rose-700 ring-rose-200',
   };
 
-  return styles[status] || 'bg-slate-100 text-slate-700';
+  return styles[status] || 'bg-slate-100 text-slate-600 ring-slate-200';
 };
 
 const formatDate = (date) => {
@@ -85,15 +84,9 @@ export default function AdminComplaints() {
       setLoading(true);
       setError('');
 
-      const params = statusFilter
-        ? { status: statusFilter }
-        : {};
+      const params = statusFilter ? { status: statusFilter } : {};
 
-      const response = await apiClient.get(
-        '/admin/complaints.php',
-        { params }
-      );
-
+      const response = await apiClient.get('/admin/complaints.php', { params });
       const data = response.data?.data;
 
       setComplaints(data?.complaints || []);
@@ -101,7 +94,7 @@ export default function AdminComplaints() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        'Unable to load complaints. Please try again.'
+          'Unable to load complaints. Please try again.'
       );
     } finally {
       setLoading(false);
@@ -114,7 +107,6 @@ export default function AdminComplaints() {
 
   const filteredComplaints = useMemo(() => {
     const term = search.toLowerCase().trim();
-
     if (!term) return complaints;
 
     return complaints.filter((complaint) =>
@@ -128,27 +120,22 @@ export default function AdminComplaints() {
         complaint.police_station,
       ]
         .filter(Boolean)
-        .some((value) =>
-          String(value).toLowerCase().includes(term)
-        )
+        .some((value) => String(value).toLowerCase().includes(term))
     );
   }, [complaints, search]);
 
-  const counts = useMemo(() => ({
-    total: complaints.length,
-    submitted: complaints.filter(
-      (c) => c.status === 'SUBMITTED'
-    ).length,
-    assigned: complaints.filter(
-      (c) => c.status === 'ASSIGNED'
-    ).length,
-    investigation: complaints.filter(
-      (c) => c.status === 'INVESTIGATION_IN_PROGRESS'
-    ).length,
-    resolved: complaints.filter(
-      (c) => c.status === 'RESOLVED'
-    ).length,
-  }), [complaints]);
+  const counts = useMemo(
+    () => ({
+      total: complaints.length,
+      submitted: complaints.filter((c) => c.status === 'SUBMITTED').length,
+      assigned: complaints.filter((c) => c.status === 'ASSIGNED').length,
+      investigation: complaints.filter(
+        (c) => c.status === 'INVESTIGATION_IN_PROGRESS'
+      ).length,
+      resolved: complaints.filter((c) => c.status === 'RESOLVED').length,
+    }),
+    [complaints]
+  );
 
   const openComplaint = (complaint) => {
     setSelectedComplaint(complaint);
@@ -190,15 +177,12 @@ export default function AdminComplaints() {
       });
 
       setMessage('Complaint assigned successfully.');
-
       await loadComplaints();
-
       setSelectedComplaint(null);
       setSelectedOfficer('');
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-        'Failed to assign complaint.'
+        err.response?.data?.message || 'Failed to assign complaint.'
       );
     } finally {
       setProcessing(false);
@@ -236,9 +220,7 @@ export default function AdminComplaints() {
       });
 
       setMessage('Complaint status updated successfully.');
-
       await loadComplaints();
-
       setSelectedComplaint(null);
       setNewStatus('');
       setRemark('');
@@ -246,26 +228,24 @@ export default function AdminComplaints() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        'Failed to update complaint status.'
+          'Failed to update complaint status.'
       );
     } finally {
       setProcessing(false);
     }
   };
 
-  const isFinalComplaint = selectedComplaint &&
-    ['RESOLVED', 'CLOSED', 'REJECTED'].includes(
-      selectedComplaint.status
-    );
+  const isFinalComplaint =
+    selectedComplaint &&
+    ['RESOLVED', 'CLOSED', 'REJECTED'].includes(selectedComplaint.status);
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl space-y-6">
-
+      <div className="mx-auto max-w-7xl space-y-5">
         {/* Header */}
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">
+            <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
               Manage Complaints
             </h1>
             <p className="mt-1 text-sm text-slate-500">
@@ -276,74 +256,74 @@ export default function AdminComplaints() {
           <button
             onClick={loadComplaints}
             disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-xs hover:bg-slate-50 disabled:opacity-50"
           >
-            <RefreshCw size={16} />
+            <RefreshCw
+              size={15}
+              className={loading ? 'animate-spin' : ''}
+            />
             Refresh
           </button>
         </div>
 
         {/* Notifications */}
         {message && (
-          <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
-            <CheckCircle size={18} />
+          <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50/70 p-3 text-sm text-emerald-700">
+            <CheckCircle size={16} />
             {message}
-            <button
-              onClick={() => setMessage('')}
-              className="ml-auto"
-            >
-              <X size={16} />
+            <button onClick={() => setMessage('')} className="ml-auto">
+              <X size={15} />
             </button>
           </div>
         )}
 
         {error && !selectedComplaint && (
-          <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-            <AlertCircle size={18} />
+          <div className="flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50/70 p-3 text-sm text-rose-700">
+            <AlertCircle size={16} />
             {error}
           </div>
         )}
 
         {/* Statistics */}
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
           <StatCard
-            title="Total Complaints"
+            title="Total"
             value={counts.total}
             icon={FileText}
-            color="text-blue-600"
+            tone="text-slate-600 bg-slate-100"
           />
           <StatCard
             title="Submitted"
             value={counts.submitted}
             icon={Clock}
-            color="text-amber-600"
+            tone="text-amber-600 bg-amber-50"
           />
           <StatCard
             title="Assigned"
             value={counts.assigned}
             icon={UserCheck}
-            color="text-purple-600"
+            tone="text-purple-600 bg-purple-50"
           />
           <StatCard
-            title="Under Investigation"
+            title="Investigating"
             value={counts.investigation}
             icon={AlertCircle}
-            color="text-indigo-600"
+            tone="text-indigo-600 bg-indigo-50"
           />
           <StatCard
             title="Resolved"
             value={counts.resolved}
             icon={CheckCircle}
-            color="text-green-600"
+            tone="text-emerald-600 bg-emerald-50"
           />
         </div>
 
         {/* Search and Filter */}
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="flex flex-col gap-3 md:flex-row">
+        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-xs">
+          <div className="flex flex-col gap-2 md:flex-row">
             <div className="relative flex-1">
               <Search
-                size={18}
+                size={17}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
               />
               <input
@@ -351,19 +331,19 @@ export default function AdminComplaints() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search complaint ID, citizen, subject or officer..."
-                className="form-input w-full pl-10"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50/50 py-2 pl-9 pr-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
               />
             </div>
 
-            <div className="relative md:w-64">
+            <div className="relative md:w-60">
               <Filter
-                size={17}
+                size={16}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
               />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="form-input w-full pl-10"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50/50 py-2 pl-9 pr-3 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
               >
                 <option value="">All Statuses</option>
                 {STATUSES.map((status) => (
@@ -377,46 +357,39 @@ export default function AdminComplaints() {
         </div>
 
         {/* Complaints Table */}
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-200 px-5 py-4">
-            <h2 className="font-semibold text-slate-900">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs">
+          <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+            <h2 className="text-sm font-semibold text-slate-900">
               Complaint Records
             </h2>
-            <p className="mt-1 text-xs text-slate-500">
-              Showing {filteredComplaints.length} complaint(s)
-            </p>
+            <span className="text-xs text-slate-500">
+              {filteredComplaints.length} result(s)
+            </span>
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center gap-2 p-12 text-slate-500">
-              <RefreshCw className="animate-spin" size={20} />
+            <div className="flex items-center justify-center gap-2 p-10 text-sm text-slate-500">
+              <RefreshCw className="animate-spin" size={16} />
               Loading complaints...
             </div>
           ) : filteredComplaints.length === 0 ? (
-            <div className="p-12 text-center">
-              <FileText
-                size={36}
-                className="mx-auto mb-3 text-slate-300"
-              />
-              <p className="font-medium text-slate-700">
-                No complaints found
-              </p>
-              <p className="mt-1 text-sm text-slate-500">
-                Try changing your search or status filter.
-              </p>
-            </div>
+            <EmptyState
+              icon={FileText}
+              title="No complaints found"
+              description="Try changing your search or status filter."
+            />
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+                <thead className="bg-slate-50/60 text-[11px] uppercase tracking-wide text-slate-500">
                   <tr>
-                    <th className="px-5 py-3">Complaint</th>
-                    <th className="px-5 py-3">Citizen</th>
-                    <th className="px-5 py-3">Category</th>
-                    <th className="px-5 py-3">Assigned Officer</th>
-                    <th className="px-5 py-3">Status</th>
-                    <th className="px-5 py-3">Date</th>
-                    <th className="px-5 py-3 text-right">Action</th>
+                    <th className="px-4 py-2.5 font-semibold">Complaint</th>
+                    <th className="px-4 py-2.5 font-semibold">Citizen</th>
+                    <th className="px-4 py-2.5 font-semibold">Category</th>
+                    <th className="px-4 py-2.5 font-semibold">Officer</th>
+                    <th className="px-4 py-2.5 font-semibold">Status</th>
+                    <th className="px-4 py-2.5 font-semibold">Date</th>
+                    <th className="px-4 py-2.5 text-right font-semibold">Action</th>
                   </tr>
                 </thead>
 
@@ -424,19 +397,19 @@ export default function AdminComplaints() {
                   {filteredComplaints.map((complaint) => (
                     <tr
                       key={complaint.id}
-                      className="hover:bg-slate-50"
+                      className="transition-colors hover:bg-slate-50/60"
                     >
-                      <td className="px-5 py-4">
-                        <p className="font-semibold text-slate-900">
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-slate-900">
                           {complaint.complaint_ref}
                         </p>
-                        <p className="mt-1 max-w-48 truncate text-xs text-slate-500">
+                        <p className="mt-0.5 max-w-48 truncate text-xs text-slate-500">
                           {complaint.subject}
                         </p>
                       </td>
 
-                      <td className="px-5 py-4">
-                        <p className="font-medium text-slate-800">
+                      <td className="px-4 py-3">
+                        <p className="text-slate-800">
                           {complaint.citizen_name}
                         </p>
                         <p className="text-xs text-slate-500">
@@ -444,11 +417,11 @@ export default function AdminComplaints() {
                         </p>
                       </td>
 
-                      <td className="px-5 py-4 text-slate-600">
+                      <td className="px-4 py-3 text-slate-600">
                         {complaint.category_name || 'N/A'}
                       </td>
 
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-3">
                         <p className="text-slate-700">
                           {complaint.officer_name || 'Not assigned'}
                         </p>
@@ -457,22 +430,24 @@ export default function AdminComplaints() {
                         </p>
                       </td>
 
-                      <td className="px-5 py-4">
-                        <span className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(complaint.status)}`}>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`inline-flex whitespace-nowrap rounded-md px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${statusStyle(complaint.status)}`}
+                        >
                           {complaint.status?.replaceAll('_', ' ')}
                         </span>
                       </td>
 
-                      <td className="whitespace-nowrap px-5 py-4 text-slate-600">
+                      <td className="whitespace-nowrap px-4 py-3 text-slate-600">
                         {formatDate(complaint.submitted_at)}
                       </td>
 
-                      <td className="px-5 py-4 text-right">
+                      <td className="px-4 py-3 text-right">
                         <button
                           onClick={() => openComplaint(complaint)}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+                          className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:border-slate-300 hover:bg-slate-50"
                         >
-                          <Eye size={15} />
+                          <Eye size={14} />
                           Manage
                         </button>
                       </td>
@@ -487,15 +462,14 @@ export default function AdminComplaints() {
 
       {/* Complaint Management Modal */}
       {selectedComplaint && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4">
-          <div className="my-8 w-full max-w-2xl rounded-2xl bg-white shadow-xl">
-
-            <div className="flex items-center justify-between border-b border-slate-200 p-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/40 p-4 backdrop-blur-sm">
+          <div className="my-8 w-full max-w-2xl rounded-xl border border-slate-200 bg-white shadow-lg">
+            <div className="flex items-start justify-between border-b border-slate-100 p-4">
               <div>
-                <h2 className="text-lg font-bold text-slate-900">
+                <h2 className="text-base font-semibold text-slate-900">
                   Manage Complaint
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-0.5 text-xs text-slate-500">
                   {selectedComplaint.complaint_ref}
                 </p>
               </div>
@@ -503,37 +477,24 @@ export default function AdminComplaints() {
               <button
                 onClick={closeModal}
                 disabled={processing}
-                className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <div className="max-h-[70vh] space-y-6 overflow-y-auto p-5">
-
+            <div className="max-h-[70vh] space-y-5 overflow-y-auto p-4">
               {/* Complaint Details */}
               <section>
-                <h3 className="mb-3 font-semibold text-slate-900">
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
                   Complaint Details
                 </h3>
 
-                <div className="grid grid-cols-1 gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2">
-                  <Detail
-                    label="Subject"
-                    value={selectedComplaint.subject}
-                  />
-                  <Detail
-                    label="Category"
-                    value={selectedComplaint.category_name}
-                  />
-                  <Detail
-                    label="Citizen"
-                    value={selectedComplaint.citizen_name}
-                  />
-                  <Detail
-                    label="Phone"
-                    value={selectedComplaint.citizen_phone}
-                  />
+                <div className="grid grid-cols-1 gap-3 rounded-lg bg-slate-50/60 p-3 sm:grid-cols-2">
+                  <Detail label="Subject" value={selectedComplaint.subject} />
+                  <Detail label="Category" value={selectedComplaint.category_name} />
+                  <Detail label="Citizen" value={selectedComplaint.citizen_name} />
+                  <Detail label="Phone" value={selectedComplaint.citizen_phone} />
                   <Detail
                     label="Incident Date"
                     value={formatDate(selectedComplaint.incident_date)}
@@ -552,11 +513,11 @@ export default function AdminComplaints() {
                   />
                 </div>
 
-                <div className="mt-4">
-                  <p className="mb-1 text-xs font-semibold uppercase text-slate-500">
+                <div className="mt-3">
+                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                     Description
                   </p>
-                  <p className="whitespace-pre-wrap rounded-xl border border-slate-200 p-4 text-sm leading-6 text-slate-700">
+                  <p className="whitespace-pre-wrap rounded-lg border border-slate-200 bg-white p-3 text-sm leading-6 text-slate-700">
                     {selectedComplaint.description || 'No description provided.'}
                   </p>
                 </div>
@@ -564,23 +525,25 @@ export default function AdminComplaints() {
 
               {/* Assign Officer */}
               {!isFinalComplaint && (
-                <section className="border-t border-slate-200 pt-5">
-                  <h3 className="mb-3 flex items-center gap-2 font-semibold text-slate-900">
-                    <UserCheck size={18} />
+                <section className="border-t border-slate-100 pt-4">
+                  <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-900">
+                    <UserCheck size={16} className="text-slate-500" />
                     Assign Police Officer
                   </h3>
 
-                  <p className="mb-3 text-sm text-slate-500">
-                    Current officer: {selectedComplaint.officer_name || 'Not assigned'}
+                  <p className="mb-2 text-xs text-slate-500">
+                    Current officer:{' '}
+                    <span className="font-medium text-slate-700">
+                      {selectedComplaint.officer_name || 'Not assigned'}
+                    </span>
                   </p>
 
                   <select
                     value={selectedOfficer}
                     onChange={(e) => setSelectedOfficer(e.target.value)}
-                    className="form-input w-full"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                   >
                     <option value="">Select an active officer</option>
-
                     {officers.map((officer) => (
                       <option
                         key={officer.id}
@@ -599,9 +562,9 @@ export default function AdminComplaints() {
                   <button
                     onClick={assignOfficer}
                     disabled={processing || !selectedOfficer}
-                    className="mt-3 inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="mt-2.5 inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <UserCheck size={16} />
+                    <UserCheck size={15} />
                     {processing ? 'Processing...' : 'Assign Officer'}
                   </button>
 
@@ -615,19 +578,18 @@ export default function AdminComplaints() {
 
               {/* Update Status */}
               {!isFinalComplaint && (
-                <section className="border-t border-slate-200 pt-5">
-                  <h3 className="mb-3 font-semibold text-slate-900">
+                <section className="border-t border-slate-100 pt-4">
+                  <h3 className="mb-2 text-sm font-semibold text-slate-900">
                     Update Complaint Status
                   </h3>
 
-                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                  <label className="mb-1 block text-xs font-medium text-slate-600">
                     New Status
                   </label>
-
                   <select
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value)}
-                    className="form-input w-full"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                   >
                     <option value="">Select new status</option>
                     {UPDATE_STATUSES.map((status) => (
@@ -637,32 +599,30 @@ export default function AdminComplaints() {
                     ))}
                   </select>
 
-                  <label className="mb-1 mt-4 block text-sm font-medium text-slate-700">
+                  <label className="mb-1 mt-3 block text-xs font-medium text-slate-600">
                     Remark
                   </label>
-
                   <textarea
                     value={remark}
                     onChange={(e) => setRemark(e.target.value)}
                     rows={3}
                     maxLength={1000}
                     placeholder="Enter the reason or progress update..."
-                    className="form-input w-full"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                   />
 
                   {newStatus === 'REJECTED' && (
                     <>
-                      <label className="mb-1 mt-4 block text-sm font-medium text-slate-700">
+                      <label className="mb-1 mt-3 block text-xs font-medium text-slate-600">
                         Rejection Reason
                       </label>
-
                       <textarea
                         value={rejectionReason}
                         onChange={(e) => setRejectionReason(e.target.value)}
                         rows={2}
                         maxLength={500}
                         placeholder="Enter the rejection reason..."
-                        className="form-input w-full"
+                        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                       />
                     </>
                   )}
@@ -670,7 +630,7 @@ export default function AdminComplaints() {
                   <button
                     onClick={updateStatus}
                     disabled={processing || !newStatus}
-                    className="mt-3 rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="mt-3 rounded-lg bg-blue-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {processing ? 'Processing...' : 'Update Status'}
                   </button>
@@ -678,23 +638,24 @@ export default function AdminComplaints() {
               )}
 
               {isFinalComplaint && (
-                <p className="rounded-lg bg-slate-100 p-3 text-sm text-slate-600">
-                  This complaint has a final status and cannot be assigned or updated.
+                <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
+                  This complaint has a final status and cannot be assigned or
+                  updated.
                 </p>
               )}
 
               {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                <div className="rounded-lg border border-rose-200 bg-rose-50/70 p-3 text-sm text-rose-700">
                   {error}
                 </div>
               )}
             </div>
 
-            <div className="flex justify-end border-t border-slate-200 p-4">
+            <div className="flex justify-end border-t border-slate-100 p-3">
               <button
                 onClick={closeModal}
                 disabled={processing}
-                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-lg border border-slate-200 px-3.5 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
               >
                 Close
               </button>
@@ -706,18 +667,16 @@ export default function AdminComplaints() {
   );
 }
 
-function StatCard({ title, value, icon: Icon, color }) {
+function StatCard({ title, value, icon: Icon, tone }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-xs font-medium text-slate-500 sm:text-sm">
-          {title}
-        </p>
-        <Icon size={19} className={color} />
+        <p className="text-xs font-medium text-slate-500">{title}</p>
+        <span className={`rounded-lg p-1.5 ${tone}`}>
+          <Icon size={15} />
+        </span>
       </div>
-      <p className="mt-3 text-2xl font-bold text-slate-900">
-        {value}
-      </p>
+      <p className="mt-2 text-xl font-semibold text-slate-900">{value}</p>
     </div>
   );
 }
@@ -725,12 +684,23 @@ function StatCard({ title, value, icon: Icon, color }) {
 function Detail({ label, value }) {
   return (
     <div>
-      <p className="text-xs font-medium uppercase text-slate-500">
+      <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
         {label}
       </p>
-      <p className="mt-1 break-words text-sm font-medium text-slate-800">
+      <p className="mt-0.5 break-words text-sm text-slate-800">
         {value || 'N/A'}
       </p>
+    </div>
+  );
+}
+
+// + ADDED — shared lightweight empty state
+function EmptyState({ icon: Icon, title, description }) {
+  return (
+    <div className="p-10 text-center">
+      <Icon size={28} className="mx-auto mb-2 text-slate-300" />
+      <p className="text-sm font-medium text-slate-700">{title}</p>
+      <p className="mt-1 text-xs text-slate-500">{description}</p>
     </div>
   );
 }

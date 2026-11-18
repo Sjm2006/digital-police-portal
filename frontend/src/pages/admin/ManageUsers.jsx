@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Users,
@@ -23,9 +22,9 @@ import apiClient from '../../services/apiClient';
 const STATUS_OPTIONS = ['ALL', 'ACTIVE', 'INACTIVE', 'SUSPENDED'];
 
 const STATUS_STYLES = {
-  ACTIVE: 'bg-green-100 text-green-700',
-  INACTIVE: 'bg-gray-100 text-gray-600',
-  SUSPENDED: 'bg-red-100 text-red-700',
+  ACTIVE: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+  INACTIVE: 'bg-slate-100 text-slate-600 ring-slate-200',
+  SUSPENDED: 'bg-rose-50 text-rose-700 ring-rose-200',
 };
 
 const formatDate = (value) => {
@@ -47,8 +46,8 @@ const formatDate = (value) => {
 function StatusBadge({ status }) {
   return (
     <span
-      className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-        STATUS_STYLES[status] || 'bg-gray-100 text-gray-600'
+      className={`inline-flex rounded-md px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
+        STATUS_STYLES[status] || 'bg-slate-100 text-slate-600 ring-slate-200'
       }`}
     >
       {status}
@@ -80,19 +79,10 @@ export default function ManageUsers() {
       setError('');
 
       const params = {};
+      if (search.trim()) params.search = search.trim();
+      if (statusFilter !== 'ALL') params.status = statusFilter;
 
-      if (search.trim()) {
-        params.search = search.trim();
-      }
-
-      if (statusFilter !== 'ALL') {
-        params.status = statusFilter;
-      }
-
-      const response = await apiClient.get('/admin/users.php', {
-        params,
-      });
-
+      const response = await apiClient.get('/admin/users.php', { params });
       const data = response?.data?.data;
 
       setUsers(data?.users || []);
@@ -105,7 +95,7 @@ export default function ManageUsers() {
     } catch (err) {
       setError(
         err?.response?.data?.message ||
-        'Unable to load citizen records. Please try again.'
+          'Unable to load citizen records. Please try again.'
       );
     } finally {
       setLoading(false);
@@ -135,16 +125,12 @@ export default function ManageUsers() {
         status: newStatus,
       });
 
-      setSuccess(
-        `${user.full_name}'s account status changed to ${newStatus}.`
-      );
-
+      setSuccess(`${user.full_name}'s account status changed to ${newStatus}.`);
       setSelectedUser(null);
       await loadUsers();
     } catch (err) {
       setError(
-        err?.response?.data?.message ||
-        'Unable to update account status.'
+        err?.response?.data?.message || 'Unable to update account status.'
       );
     } finally {
       setProcessingId(null);
@@ -156,38 +142,37 @@ export default function ManageUsers() {
       title: 'Total Citizens',
       value: stats.total_users,
       icon: Users,
-      color: 'bg-blue-100 text-blue-700',
+      tone: 'text-slate-600 bg-slate-100',
     },
     {
       title: 'Active Accounts',
       value: stats.active_users,
       icon: UserCheck,
-      color: 'bg-green-100 text-green-700',
+      tone: 'text-emerald-600 bg-emerald-50',
     },
     {
       title: 'Inactive Accounts',
       value: stats.inactive_users,
       icon: UserX,
-      color: 'bg-gray-100 text-gray-700',
+      tone: 'text-amber-600 bg-amber-50',
     },
     {
       title: 'Suspended Accounts',
       value: stats.suspended_users,
       icon: ShieldAlert,
-      color: 'bg-red-100 text-red-700',
+      tone: 'text-rose-600 bg-rose-50',
     },
   ];
 
   return (
-    <div className="space-y-6 p-4 md:p-6">
-
+    <div className="space-y-5 p-4 md:p-6">
       {/* Header */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
             Citizen Management
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-500">
             View and manage registered citizen accounts.
           </p>
         </div>
@@ -196,58 +181,58 @@ export default function ManageUsers() {
           type="button"
           onClick={loadUsers}
           disabled={loading}
-          className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-xs hover:bg-slate-50 disabled:opacity-50"
         >
-          <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+          <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
           Refresh
         </button>
       </div>
 
       {/* Notifications */}
       {error && (
-        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-          <AlertCircle size={18} className="mt-0.5 shrink-0" />
+        <div className="flex items-start gap-2 rounded-lg border border-rose-200 bg-rose-50/70 p-3 text-sm text-rose-700">
+          <AlertCircle size={16} className="mt-0.5 shrink-0" />
           {error}
           <button
             type="button"
             onClick={() => setError('')}
             className="ml-auto"
           >
-            <X size={16} />
+            <X size={15} />
           </button>
         </div>
       )}
 
       {success && (
-        <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+        <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50/70 p-3 text-sm text-emerald-700">
           {success}
           <button type="button" onClick={() => setSuccess('')}>
-            <X size={16} />
+            <X size={15} />
           </button>
         </div>
       )}
 
       {/* Statistics */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {statCards.map((item) => {
           const Icon = item.icon;
-
           return (
             <div
               key={item.title}
-              className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+              className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">{item.title}</p>
-                  <p className="mt-2 text-2xl font-bold text-gray-900">
+                  <p className="text-xs font-medium text-slate-500">
+                    {item.title}
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold text-slate-900">
                     {item.value}
                   </p>
                 </div>
-
-                <div className={`rounded-lg p-3 ${item.color}`}>
-                  <Icon size={22} />
-                </div>
+                <span className={`rounded-lg p-2 ${item.tone}`}>
+                  <Icon size={16} />
+                </span>
               </div>
             </div>
           );
@@ -255,26 +240,25 @@ export default function ManageUsers() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm md:flex-row">
+      <div className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 shadow-xs md:flex-row">
         <div className="relative flex-1">
           <Search
-            size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
           />
-
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name, email, phone or citizen ID..."
-            className="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-4 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-lg border border-slate-200 bg-slate-50/50 py-2 pl-9 pr-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-blue-500"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
         >
           {STATUS_OPTIONS.map((status) => (
             <option key={status} value={status}>
@@ -285,89 +269,90 @@ export default function ManageUsers() {
       </div>
 
       {/* Citizen Table */}
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
-          <div>
-            <h2 className="font-semibold text-gray-900">
-              Registered Citizens
-            </h2>
-            <p className="mt-1 text-xs text-gray-500">
-              {filteredUsers.length} records found
-            </p>
-          </div>
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs">
+        <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+          <h2 className="text-sm font-semibold text-slate-900">
+            Registered Citizens
+          </h2>
+          <span className="text-xs text-slate-500">
+            {filteredUsers.length} records
+          </span>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center gap-2 py-16 text-gray-500">
-            <Loader2 size={22} className="animate-spin" />
+          <div className="flex items-center justify-center gap-2 py-14 text-sm text-slate-500">
+            <Loader2 size={18} className="animate-spin" />
             Loading citizen records...
           </div>
         ) : filteredUsers.length === 0 ? (
-          <div className="py-16 text-center">
-            <Users size={36} className="mx-auto text-gray-300" />
-            <p className="mt-3 font-medium text-gray-700">
+          <div className="py-14 text-center">
+            <Users size={28} className="mx-auto text-slate-300" />
+            <p className="mt-2 text-sm font-medium text-slate-700">
               No citizens found
             </p>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-xs text-slate-500">
               Try changing your search or status filter.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[850px] text-left text-sm">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-500">
+              <thead className="bg-slate-50/60 text-[11px] uppercase tracking-wide text-slate-500">
                 <tr>
-                  <th className="px-5 py-4">Citizen</th>
-                  <th className="px-5 py-4">Contact</th>
-                  <th className="px-5 py-4">Complaints</th>
-                  <th className="px-5 py-4">Status</th>
-                  <th className="px-5 py-4">Registered</th>
-                  <th className="px-5 py-4 text-right">Actions</th>
+                  <th className="px-4 py-2.5 font-semibold">Citizen</th>
+                  <th className="px-4 py-2.5 font-semibold">Contact</th>
+                  <th className="px-4 py-2.5 font-semibold">Complaints</th>
+                  <th className="px-4 py-2.5 font-semibold">Status</th>
+                  <th className="px-4 py-2.5 font-semibold">Registered</th>
+                  <th className="px-4 py-2.5 text-right font-semibold">
+                    Actions
+                  </th>
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-100">
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-5 py-4">
-                      <p className="font-semibold text-gray-900">
+                  <tr
+                    key={user.id}
+                    className="transition-colors hover:bg-slate-50/60"
+                  >
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-slate-900">
                         {user.full_name}
                       </p>
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-0.5 text-xs text-slate-500">
                         {user.user_id}
                       </p>
                     </td>
 
-                    <td className="px-5 py-4">
-                      <p className="text-gray-700">{user.email}</p>
-                      <p className="mt-1 text-xs text-gray-500">
+                    <td className="px-4 py-3">
+                      <p className="text-slate-700">{user.email}</p>
+                      <p className="mt-0.5 text-xs text-slate-500">
                         {user.phone}
                       </p>
                     </td>
 
-                    <td className="px-5 py-4">
-                      <span className="font-semibold text-gray-800">
-                        {user.complaints_count ?? 0}
-                      </span>
+                    <td className="px-4 py-3 text-slate-700">
+                      {user.complaints_count ?? 0}
                     </td>
 
-                    <td className="px-5 py-4">
+                    <td className="px-4 py-3">
                       <StatusBadge status={user.status} />
                     </td>
 
-                    <td className="px-5 py-4 text-gray-600">
+                    <td className="px-4 py-3 text-slate-600">
                       {formatDate(user.created_at)}
                     </td>
 
-                    <td className="px-5 py-4">
-                      <div className="flex justify-end gap-2">
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-1.5">
                         <button
                           type="button"
                           title="View details"
                           onClick={() => setSelectedUser(user)}
-                          className="rounded-lg border border-gray-300 p-2 text-gray-600 hover:bg-gray-100"
+                          className="rounded-lg border border-slate-200 p-1.5 text-slate-600 hover:bg-slate-100"
                         >
-                          <Eye size={16} />
+                          <Eye size={14} />
                         </button>
 
                         {user.status !== 'ACTIVE' ? (
@@ -376,9 +361,9 @@ export default function ManageUsers() {
                             title="Activate account"
                             disabled={processingId === user.id}
                             onClick={() => updateStatus(user, 'ACTIVE')}
-                            className="rounded-lg border border-green-200 p-2 text-green-700 hover:bg-green-50 disabled:opacity-50"
+                            className="rounded-lg border border-emerald-200 p-1.5 text-emerald-700 hover:bg-emerald-50 disabled:opacity-50"
                           >
-                            <UserCheck size={16} />
+                            <UserCheck size={14} />
                           </button>
                         ) : (
                           <button
@@ -386,9 +371,9 @@ export default function ManageUsers() {
                             title="Deactivate account"
                             disabled={processingId === user.id}
                             onClick={() => updateStatus(user, 'INACTIVE')}
-                            className="rounded-lg border border-gray-300 p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+                            className="rounded-lg border border-slate-200 p-1.5 text-slate-600 hover:bg-slate-100 disabled:opacity-50"
                           >
-                            <UserX size={16} />
+                            <UserX size={14} />
                           </button>
                         )}
                       </div>
@@ -404,19 +389,19 @@ export default function ManageUsers() {
       {/* Citizen Details Modal */}
       {selectedUser && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm"
           onClick={() => setSelectedUser(null)}
         >
           <div
-            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white shadow-xl"
+            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-gray-200 p-5">
+            <div className="flex items-start justify-between border-b border-slate-100 p-4">
               <div>
-                <h2 className="text-lg font-bold text-gray-900">
+                <h2 className="text-base font-semibold text-slate-900">
                   Citizen Details
                 </h2>
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-0.5 text-xs text-slate-500">
                   Account information and activity
                 </p>
               </div>
@@ -424,79 +409,89 @@ export default function ManageUsers() {
               <button
                 type="button"
                 onClick={() => setSelectedUser(null)}
-                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <div className="space-y-5 p-5">
+            <div className="space-y-4 p-4">
               <div>
-                <p className="text-xl font-bold text-gray-900">
+                <p className="text-lg font-semibold text-slate-900">
                   {selectedUser.full_name}
                 </p>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-0.5 text-xs text-slate-500">
                   {selectedUser.user_id}
                 </p>
-                <div className="mt-3">
+                <div className="mt-2">
                   <StatusBadge status={selectedUser.status} />
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Mail size={18} className="text-gray-400" />
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <Mail size={16} className="mt-0.5 text-slate-400" />
                   <div>
-                    <p className="text-xs text-gray-500">Email</p>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      Email
+                    </p>
+                    <p className="text-sm text-slate-800">
                       {selectedUser.email}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <Phone size={18} className="text-gray-400" />
+                <div className="flex items-start gap-3">
+                  <Phone size={16} className="mt-0.5 text-slate-400" />
                   <div>
-                    <p className="text-xs text-gray-500">Phone</p>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      Phone
+                    </p>
+                    <p className="text-sm text-slate-800">
                       {selectedUser.phone}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <FileText size={18} className="text-gray-400" />
+                <div className="flex items-start gap-3">
+                  <FileText size={16} className="mt-0.5 text-slate-400" />
                   <div>
-                    <p className="text-xs text-gray-500">Total Complaints</p>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      Total Complaints
+                    </p>
+                    <p className="text-sm text-slate-800">
                       {selectedUser.complaints_count ?? 0}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <Calendar size={18} className="text-gray-400" />
+                <div className="flex items-start gap-3">
+                  <Calendar size={16} className="mt-0.5 text-slate-400" />
                   <div>
-                    <p className="text-xs text-gray-500">Registered On</p>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      Registered On
+                    </p>
+                    <p className="text-sm text-slate-800">
                       {formatDate(selectedUser.created_at)}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <Clock size={18} className="text-gray-400" />
+                <div className="flex items-start gap-3">
+                  <Clock size={16} className="mt-0.5 text-slate-400" />
                   <div>
-                    <p className="text-xs text-gray-500">Last Login</p>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      Last Login
+                    </p>
+                    <p className="text-sm text-slate-800">
                       {formatDate(selectedUser.last_login_at)}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
-                <p className="mb-3 text-sm font-semibold text-gray-800">
+              <div className="border-t border-slate-100 pt-3">
+                <p className="mb-2 text-sm font-medium text-slate-800">
                   Account Actions
                 </p>
 
@@ -506,7 +501,7 @@ export default function ManageUsers() {
                       type="button"
                       disabled={processingId === selectedUser.id}
                       onClick={() => updateStatus(selectedUser, 'ACTIVE')}
-                      className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                      className="rounded-lg bg-emerald-600 px-3.5 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
                     >
                       Activate
                     </button>
@@ -517,7 +512,7 @@ export default function ManageUsers() {
                       type="button"
                       disabled={processingId === selectedUser.id}
                       onClick={() => updateStatus(selectedUser, 'INACTIVE')}
-                      className="rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+                      className="rounded-lg bg-slate-700 px-3.5 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
                     >
                       Deactivate
                     </button>
@@ -528,7 +523,7 @@ export default function ManageUsers() {
                       type="button"
                       disabled={processingId === selectedUser.id}
                       onClick={() => updateStatus(selectedUser, 'SUSPENDED')}
-                      className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                      className="rounded-lg bg-rose-600 px-3.5 py-1.5 text-sm font-medium text-white hover:bg-rose-700 disabled:opacity-50"
                     >
                       Suspend
                     </button>

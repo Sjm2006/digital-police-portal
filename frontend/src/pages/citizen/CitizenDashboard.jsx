@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+﻿﻿import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   FileText,
@@ -68,15 +68,19 @@ export default function CitizenDashboard() {
       }
 
       if (results[1].status === 'fulfilled') {
-        setNotifications(Array.isArray(results[1].value.data?.data?.notifications) ? results[1].value.data.data.notifications : []);
+        setNotifications(
+          Array.isArray(results[1].value.data?.data?.notifications)
+            ? results[1].value.data.data.notifications
+            : []
+        );
       } else {
         setNotifications([]);
       }
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        err.message ||
-        'Unable to load dashboard information.'
+          err.message ||
+          'Unable to load dashboard information.'
       );
     } finally {
       setLoading(false);
@@ -93,9 +97,7 @@ export default function CitizenDashboard() {
 
   const unreadCount = notifications.filter(
     (item) =>
-      item.is_read === false ||
-      item.is_read === 0 ||
-      item.is_read === '0'
+      item.is_read === false || item.is_read === 0 || item.is_read === '0'
   ).length;
 
   const recentComplaints = [...complaints]
@@ -111,50 +113,57 @@ export default function CitizenDashboard() {
       label: 'Total Complaints',
       value: complaints.length,
       icon: FileText,
-      color: 'bg-blue-50 text-blue-700',
+      tone: 'bg-blue-50 text-blue-700',
     },
     {
       label: 'Pending',
       value: pending,
       icon: Clock,
-      color: 'bg-amber-50 text-amber-700',
+      tone: 'bg-amber-50 text-amber-700',
     },
     {
       label: 'In Progress',
       value: inProgress,
       icon: Search,
-      color: 'bg-indigo-50 text-indigo-700',
+      tone: 'bg-indigo-50 text-indigo-700',
     },
     {
       label: 'Resolved',
       value: resolved,
       icon: CheckCircle,
-      color: 'bg-green-50 text-green-700',
+      tone: 'bg-emerald-50 text-emerald-700',
     },
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       <PageHeader
         title="Citizen Dashboard"
         description="Monitor your complaints, track updates and stay informed."
       />
 
-      <section className="rounded-xl bg-navy-900 p-6 text-white sm:p-8">
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+      {/* Welcome banner — lighter gradient + border instead of solid navy */}
+      <section className="relative overflow-hidden rounded-xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 p-5 text-white shadow-xs sm:p-6">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl"
+        />
+        <div className="relative flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <p className="text-sm text-slate-300">Welcome back,</p>
-            <h2 className="mt-1 text-2xl font-bold">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-300">
+              Welcome back
+            </p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">
               {user?.full_name || 'Citizen'}
             </h2>
-            <p className="mt-2 text-sm text-slate-300">
+            <p className="mt-1.5 text-sm text-slate-300">
               Your complaints and their latest progress are available here.
             </p>
           </div>
 
           <Link
             to="/citizen/complaints"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-navy-900 transition hover:bg-slate-100"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-900 shadow-xs transition hover:bg-slate-100"
           >
             <Plus className="h-4 w-4" />
             Submit Complaint
@@ -163,13 +172,14 @@ export default function CitizenDashboard() {
       </section>
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-rose-200 bg-rose-50/70 p-3 text-sm text-rose-700">
           {error}
         </div>
       )}
 
+      {/* Section header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-navy-900">
+        <h2 className="text-sm font-semibold text-slate-900">
           Complaint Overview
         </h2>
 
@@ -177,14 +187,15 @@ export default function CitizenDashboard() {
           type="button"
           onClick={loadDashboard}
           disabled={loading}
-          className="inline-flex items-center gap-2 text-sm font-medium text-navy-800 hover:underline disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 disabled:opacity-50"
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Refresh
         </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Stat cards */}
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
 
@@ -192,31 +203,34 @@ export default function CitizenDashboard() {
             <Card key={stat.label}>
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm text-slate-500">{stat.label}</p>
-                  <p className="mt-2 text-3xl font-bold text-navy-900">
+                  <p className="text-xs font-medium text-slate-500">
+                    {stat.label}
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold text-slate-900">
                     {loading ? '—' : stat.value}
                   </p>
                 </div>
 
-                <div className={`rounded-xl p-3 ${stat.color}`}>
-                  <Icon className="h-6 w-6" />
-                </div>
+                <span className={`rounded-lg p-2 ${stat.tone}`}>
+                  <Icon size={16} />
+                </span>
               </div>
             </Card>
           );
         })}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid gap-4 xl:grid-cols-3">
+        {/* Recent complaints */}
         <Card>
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-navy-900">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-slate-900">
               Recent Complaints
             </h2>
 
             <Link
               to="/citizen/complaints"
-              className="text-sm font-medium text-navy-800 hover:underline"
+              className="text-xs font-medium text-blue-600 hover:text-blue-700"
             >
               View all
             </Link>
@@ -228,26 +242,29 @@ export default function CitizenDashboard() {
             </p>
           ) : recentComplaints.length === 0 ? (
             <div className="py-8 text-center">
-              <FileText className="mx-auto h-10 w-10 text-slate-300" />
-              <p className="mt-3 text-sm text-slate-500">
+              <FileText
+                size={28}
+                className="mx-auto text-slate-300"
+              />
+              <p className="mt-2 text-sm text-slate-500">
                 No complaints submitted yet.
               </p>
               <Link
                 to="/citizen/complaints"
-                className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-navy-800 hover:underline"
+                className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-700"
               >
-                Submit your first complaint <ArrowRight className="h-4 w-4" />
+                Submit your first complaint <ArrowRight size={13} />
               </Link>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentComplaints.map((complaint) => (
                 <div
                   key={complaint.id}
-                  className="flex flex-col gap-2 border-b border-slate-100 pb-4 last:border-0"
+                  className="flex flex-col gap-1.5 border-b border-slate-100 pb-3 last:border-0 last:pb-0"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="font-medium text-navy-900">
+                    <p className="text-sm font-medium text-slate-900">
                       {complaint.subject}
                     </p>
                     <Badge>{complaint.status || 'Unknown'}</Badge>
@@ -267,17 +284,20 @@ export default function CitizenDashboard() {
           )}
         </Card>
 
+        {/* Notifications */}
         <Card>
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-navy-900">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-slate-900">
               Notifications
             </h2>
-            <Bell className="h-5 w-5 text-slate-500" />
+            <Bell size={16} className="text-slate-400" />
           </div>
 
-          <div className="mb-4 rounded-lg bg-slate-50 p-4">
-            <p className="text-sm text-slate-500">Unread notifications</p>
-            <p className="mt-1 text-2xl font-bold text-navy-900">
+          <div className="mb-3 rounded-lg bg-slate-50 p-3">
+            <p className="text-xs font-medium text-slate-500">
+              Unread notifications
+            </p>
+            <p className="mt-1 text-2xl font-semibold text-slate-900">
               {loading ? '—' : unreadCount}
             </p>
           </div>
@@ -289,19 +309,21 @@ export default function CitizenDashboard() {
               No notifications available.
             </p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {notifications.slice(0, 5).map((notification, index) => (
                 <div
                   key={notification.id || index}
-                  className="border-b border-slate-100 pb-3 last:border-0"
+                  className="border-b border-slate-100 pb-2.5 last:border-0 last:pb-0"
                 >
-                  <p className="text-sm font-medium text-navy-900">
+                  <p className="text-sm font-medium text-slate-900">
                     {notification.title || 'Notification'}
                   </p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    {notification.message || notification.body || 'You have a new update.'}
+                  <p className="mt-0.5 text-xs text-slate-600">
+                    {notification.message ||
+                      notification.body ||
+                      'You have a new update.'}
                   </p>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="mt-1 text-[11px] text-slate-400">
                     {formatDate(notification.created_at)}
                   </p>
                 </div>
@@ -313,4 +335,3 @@ export default function CitizenDashboard() {
     </div>
   );
 }
-

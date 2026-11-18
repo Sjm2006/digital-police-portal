@@ -52,7 +52,7 @@ export default function ComplaintDetails() {
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-slate-500">
+      <div className="py-12 text-center text-sm text-slate-500">
         Loading complaint details...
       </div>
     );
@@ -60,17 +60,17 @@ export default function ComplaintDetails() {
 
   if (error || !complaint) {
     return (
-      <div className="space-y-5">
+      <div className="space-y-4">
         <Link
           to="/citizen/complaints"
-          className="inline-flex items-center gap-2 text-sm font-medium text-navy-800 hover:underline"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={14} />
           Back to complaints
         </Link>
 
         <Card>
-          <div className="py-6 text-center text-red-600">
+          <div className="py-6 text-center text-sm text-rose-600">
             {error || 'Complaint not found.'}
           </div>
         </Card>
@@ -81,12 +81,12 @@ export default function ComplaintDetails() {
   const history = complaint.history || [];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       <Link
         to="/citizen/complaints"
-        className="inline-flex items-center gap-2 text-sm font-medium text-navy-800 hover:underline"
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900"
       >
-        <ArrowLeft size={16} />
+        <ArrowLeft size={14} />
         Back to complaints
       </Link>
 
@@ -96,10 +96,12 @@ export default function ComplaintDetails() {
       />
 
       <Card>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm text-slate-500">Complaint Reference</p>
-            <h2 className="mt-1 text-xl font-bold text-navy-900">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              Complaint Reference
+            </p>
+            <h2 className="mt-1 text-lg font-semibold text-slate-900">
               {complaint.complaint_ref}
             </h2>
           </div>
@@ -107,52 +109,54 @@ export default function ComplaintDetails() {
           <Badge>{complaint.status}</Badge>
         </div>
 
-        <div className="mt-6 space-y-5">
+        <div className="mt-5 space-y-4">
           <div>
-            <p className="text-sm font-medium text-slate-500">Subject</p>
-            <p className="mt-1 font-semibold text-slate-900">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              Subject
+            </p>
+            <p className="mt-1 text-sm font-medium text-slate-900">
               {complaint.subject}
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-medium text-slate-500">Category</p>
-            <p className="mt-1 text-slate-900">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              Category
+            </p>
+            <p className="mt-1 text-sm text-slate-800">
               {complaint.category_name || 'Not available'}
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
               Detailed Description
             </p>
-            <p className="mt-2 whitespace-pre-wrap leading-7 text-slate-700">
+            <p className="mt-1.5 whitespace-pre-wrap text-sm leading-6 text-slate-700">
               {complaint.description}
             </p>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2">
-            <div className="flex items-start gap-3">
-              <Clock size={18} className="mt-1 text-slate-500" />
-
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex items-start gap-2.5">
+              <Clock size={16} className="mt-0.5 text-slate-400" />
               <div>
-                <p className="text-sm font-medium text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                   Incident Date
                 </p>
-                <p className="mt-1 text-slate-900">
+                <p className="mt-0.5 text-sm text-slate-800">
                   {complaint.incident_date || 'Not available'}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3">
-              <MapPin size={18} className="mt-1 text-slate-500" />
-
+            <div className="flex items-start gap-2.5">
+              <MapPin size={16} className="mt-0.5 text-slate-400" />
               <div>
-                <p className="text-sm font-medium text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                   Incident Location
                 </p>
-                <p className="mt-1 text-slate-900">
+                <p className="mt-0.5 text-sm text-slate-800">
                   {complaint.incident_location || 'Not available'}
                 </p>
               </div>
@@ -160,40 +164,40 @@ export default function ComplaintDetails() {
           </div>
 
           <div>
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
               Police Station
             </p>
-            <p className="mt-1 text-slate-900">
+            <p className="mt-1 text-sm text-slate-800">
               {complaint.police_station_name || 'Not yet assigned'}
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
               Submitted On
             </p>
-            <p className="mt-1 text-slate-900">
+            <p className="mt-1 text-sm text-slate-800">
               {formatDate(complaint.submitted_at)}
             </p>
           </div>
 
           {complaint.resolved_at && (
             <div>
-              <p className="text-sm font-medium text-slate-500">
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                 Resolved On
               </p>
-              <p className="mt-1 text-slate-900">
+              <p className="mt-1 text-sm text-slate-800">
                 {formatDate(complaint.resolved_at)}
               </p>
             </div>
           )}
 
           {complaint.rejection_reason && (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-              <p className="font-semibold text-red-800">
+            <div className="rounded-lg border border-rose-200 bg-rose-50/70 p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-rose-800">
                 Rejection Reason
               </p>
-              <p className="mt-2 text-sm text-red-700">
+              <p className="mt-1.5 text-sm text-rose-700">
                 {complaint.rejection_reason}
               </p>
             </div>
@@ -202,11 +206,11 @@ export default function ComplaintDetails() {
       </Card>
 
       <Card>
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-navy-900">
+        <div className="mb-5">
+          <h2 className="text-sm font-semibold text-slate-900">
             Complaint Status Timeline
           </h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-0.5 text-xs text-slate-500">
             Updates visible to you regarding your complaint.
           </p>
         </div>
@@ -216,40 +220,40 @@ export default function ComplaintDetails() {
             No status updates are available yet.
           </p>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {history.map((item, index) => (
               <div
                 key={`${item.created_at}-${index}`}
-                className="relative flex gap-4"
+                className="relative flex gap-3"
               >
                 <div className="flex flex-col items-center">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100">
-                    <FileText size={16} className="text-navy-800" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                    <FileText size={14} />
                   </div>
 
                   {index !== history.length - 1 && (
-                    <div className="mt-2 h-full min-h-8 w-px bg-slate-200" />
+                    <div className="mt-1.5 h-full min-h-6 w-px bg-slate-200" />
                   )}
                 </div>
 
-                <div className="flex-1 pb-3">
-                  <p className="font-semibold text-slate-900">
+                <div className="flex-1 pb-2">
+                  <p className="text-sm font-medium text-slate-900">
                     {item.new_status || 'Status updated'}
                   </p>
 
                   {item.old_status && (
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-0.5 text-xs text-slate-500">
                       Previous status: {item.old_status}
                     </p>
                   )}
 
                   {item.remark && (
-                    <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                    <p className="mt-1.5 whitespace-pre-wrap text-sm leading-6 text-slate-700">
                       {item.remark}
                     </p>
                   )}
 
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-1.5 text-[11px] text-slate-500">
                     {formatDate(item.created_at)}
                   </p>
                 </div>

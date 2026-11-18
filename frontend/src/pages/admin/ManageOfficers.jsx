@@ -1,8 +1,16 @@
-
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  UserPlus, Search, RefreshCw, Pencil, X, Users,
-  UserCheck, UserX, ShieldCheck, MapPin, Loader2
+  UserPlus,
+  Search,
+  RefreshCw,
+  Pencil,
+  X,
+  Users,
+  UserCheck,
+  UserX,
+  ShieldCheck,
+  MapPin,
+  Loader2,
 } from 'lucide-react';
 import apiClient from '../../services/apiClient';
 
@@ -18,9 +26,9 @@ const EMPTY_FORM = {
 };
 
 const STATUS_STYLES = {
-  ACTIVE: 'bg-green-100 text-green-700',
-  INACTIVE: 'bg-slate-100 text-slate-600',
-  SUSPENDED: 'bg-red-100 text-red-700',
+  ACTIVE: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+  INACTIVE: 'bg-slate-100 text-slate-600 ring-slate-200',
+  SUSPENDED: 'bg-rose-50 text-rose-700 ring-rose-200',
 };
 
 export default function ManageOfficers() {
@@ -49,7 +57,7 @@ export default function ManageOfficers() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        'Unable to load officers. Please check your connection.'
+          'Unable to load officers. Please check your connection.'
       );
     } finally {
       setLoading(false);
@@ -64,28 +72,32 @@ export default function ManageOfficers() {
     const term = search.trim().toLowerCase();
 
     return officers.filter((officer) => {
-      const matchesSearch = !term || [
-        officer.full_name,
-        officer.user_id,
-        officer.email,
-        officer.phone,
-        officer.police_station_name,
-        officer.designation,
-      ].some((value) => String(value ?? '').toLowerCase().includes(term));
+      const matchesSearch =
+        !term ||
+        [
+          officer.full_name,
+          officer.user_id,
+          officer.email,
+          officer.phone,
+          officer.police_station_name,
+          officer.designation,
+        ].some((value) => String(value ?? '').toLowerCase().includes(term));
 
-      const matchesStatus =
-        !statusFilter || officer.status === statusFilter;
+      const matchesStatus = !statusFilter || officer.status === statusFilter;
 
       return matchesSearch && matchesStatus;
     });
   }, [officers, search, statusFilter]);
 
-  const stats = useMemo(() => ({
-    total: officers.length,
-    active: officers.filter((o) => o.status === 'ACTIVE').length,
-    inactive: officers.filter((o) => o.status === 'INACTIVE').length,
-    suspended: officers.filter((o) => o.status === 'SUSPENDED').length,
-  }), [officers]);
+  const stats = useMemo(
+    () => ({
+      total: officers.length,
+      active: officers.filter((o) => o.status === 'ACTIVE').length,
+      inactive: officers.filter((o) => o.status === 'INACTIVE').length,
+      suspended: officers.filter((o) => o.status === 'SUSPENDED').length,
+    }),
+    [officers]
+  );
 
   const openCreate = () => {
     setEditingId(null);
@@ -155,8 +167,7 @@ export default function ManageOfficers() {
       await loadOfficers();
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-        'Unable to save officer details.'
+        err.response?.data?.message || 'Unable to save officer details.'
       );
     } finally {
       setSaving(false);
@@ -164,11 +175,12 @@ export default function ManageOfficers() {
   };
 
   const changeStatus = async (officer) => {
-    const nextStatus =
-      officer.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    const nextStatus = officer.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
 
     const confirmed = window.confirm(
-      `Are you sure you want to ${nextStatus === 'ACTIVE' ? 'activate' : 'deactivate'} ${officer.full_name}?`
+      `Are you sure you want to ${
+        nextStatus === 'ACTIVE' ? 'activate' : 'deactivate'
+      } ${officer.full_name}?`
     );
 
     if (!confirmed) return;
@@ -192,8 +204,7 @@ export default function ManageOfficers() {
       await loadOfficers();
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-        'Unable to update officer status.'
+        err.response?.data?.message || 'Unable to update officer status.'
       );
     }
   };
@@ -204,10 +215,10 @@ export default function ManageOfficers() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
+          <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
             Manage Officers
           </h1>
           <p className="mt-1 text-sm text-slate-500">
@@ -217,66 +228,74 @@ export default function ManageOfficers() {
 
         <button
           onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-navy-800"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-800"
         >
-          <UserPlus size={18} />
+          <UserPlus size={16} />
           Add Officer
         </button>
       </div>
 
       {message && (
-        <div className="flex items-center justify-between rounded-lg bg-green-50 p-3 text-sm text-green-700">
+        <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50/70 p-3 text-sm text-emerald-700">
           {message}
           <button onClick={clearMessages} aria-label="Dismiss message">
-            <X size={17} />
+            <X size={15} />
           </button>
         </div>
       )}
 
       {error && (
-        <div className="flex items-center justify-between rounded-lg bg-red-50 p-3 text-sm text-red-700">
+        <div className="flex items-center justify-between rounded-lg border border-rose-200 bg-rose-50/70 p-3 text-sm text-rose-700">
           {error}
           <button onClick={clearMessages} aria-label="Dismiss error">
-            <X size={17} />
+            <X size={15} />
           </button>
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: 'Total Officers', value: stats.total, icon: Users },
-          { label: 'Active Officers', value: stats.active, icon: UserCheck },
-          { label: 'Inactive Officers', value: stats.inactive, icon: UserX },
-          { label: 'Suspended Officers', value: stats.suspended, icon: ShieldCheck },
+          { label: 'Total Officers', value: stats.total, icon: Users, tone: 'text-slate-600 bg-slate-100' },
+          { label: 'Active Officers', value: stats.active, icon: UserCheck, tone: 'text-emerald-600 bg-emerald-50' },
+          { label: 'Inactive Officers', value: stats.inactive, icon: UserX, tone: 'text-amber-600 bg-amber-50' },
+          { label: 'Suspended Officers', value: stats.suspended, icon: ShieldCheck, tone: 'text-rose-600 bg-rose-50' },
         ].map((item) => (
-          <div key={item.label} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div
+            key={item.label}
+            className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs"
+          >
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">{item.label}</p>
-              <item.icon size={21} className="text-slate-400" />
+              <p className="text-xs font-medium text-slate-500">{item.label}</p>
+              <span className={`rounded-lg p-1.5 ${item.tone}`}>
+                <item.icon size={15} />
+              </span>
             </div>
-            <p className="mt-3 text-3xl font-bold text-slate-900">
+            <p className="mt-3 text-2xl font-semibold text-slate-900">
               {item.value}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-col gap-3 border-b border-slate-200 p-4 sm:flex-row">
+      <div className="rounded-xl border border-slate-200 bg-white shadow-xs">
+        <div className="flex flex-col gap-2 border-b border-slate-100 p-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name, ID, email, phone or station..."
-              className="w-full rounded-lg border border-slate-300 py-2.5 pl-10 pr-3 text-sm outline-none focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-200 bg-slate-50/50 py-2 pl-9 pr-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
           >
             <option value="">All statuses</option>
             <option value="ACTIVE">Active</option>
@@ -287,124 +306,149 @@ export default function ManageOfficers() {
           <button
             onClick={loadOfficers}
             disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2.5 text-sm hover:bg-slate-50 disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
-            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+            <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
             Refresh
           </button>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full min-w-[850px] text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+            <thead className="bg-slate-50/60 text-[11px] uppercase tracking-wide text-slate-500">
               <tr>
-                <th className="px-5 py-4">Officer</th>
-                <th className="px-5 py-4">Officer ID</th>
-                <th className="px-5 py-4">Designation</th>
-                <th className="px-5 py-4">Police Station</th>
-                <th className="px-5 py-4">Status</th>
-                <th className="px-5 py-4 text-right">Actions</th>
+                <th className="px-4 py-2.5 font-semibold">Officer</th>
+                <th className="px-4 py-2.5 font-semibold">Officer ID</th>
+                <th className="px-4 py-2.5 font-semibold">Designation</th>
+                <th className="px-4 py-2.5 font-semibold">Police Station</th>
+                <th className="px-4 py-2.5 font-semibold">Status</th>
+                <th className="px-4 py-2.5 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-slate-500">
-                    <Loader2 className="mx-auto mb-2 animate-spin" />
+                  <td
+                    colSpan="6"
+                    className="px-4 py-10 text-center text-sm text-slate-500"
+                  >
+                    <Loader2 className="mx-auto mb-2 animate-spin" size={18} />
                     Loading officers...
                   </td>
                 </tr>
               ) : filteredOfficers.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-slate-500">
+                  <td
+                    colSpan="6"
+                    className="px-4 py-10 text-center text-sm text-slate-500"
+                  >
                     No officers found.
                   </td>
                 </tr>
-              ) : filteredOfficers.map((officer) => (
-                <tr key={officer.id} className="hover:bg-slate-50">
-                  <td className="px-5 py-4">
-                    <p className="font-semibold text-slate-800">
-                      {officer.full_name}
-                    </p>
-                    <p className="text-xs text-slate-500">{officer.email}</p>
-                    <p className="text-xs text-slate-500">{officer.phone}</p>
-                  </td>
-                  <td className="px-5 py-4 font-medium text-slate-600">
-                    {officer.user_id}
-                  </td>
-                  <td className="px-5 py-4">
-                    <p className="text-slate-800">{officer.designation}</p>
-                    <p className="text-xs text-slate-500">{officer.department}</p>
-                  </td>
-                  <td className="px-5 py-4">
-                    <p className="flex items-center gap-1 text-slate-800">
-                      <MapPin size={14} />
-                      {officer.police_station_name || 'Not assigned'}
-                    </p>
-                    <p className="text-xs text-slate-500">
-                      {officer.district || ''}
-                    </p>
-                  </td>
-                  <td className="px-5 py-4">
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[officer.status] || STATUS_STYLES.INACTIVE}`}>
-                      {officer.status}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => openEdit(officer)}
-                        title="Edit officer"
-                        className="rounded-lg border border-slate-200 p-2 text-blue-600 hover:bg-blue-50"
+              ) : (
+                filteredOfficers.map((officer) => (
+                  <tr
+                    key={officer.id}
+                    className="transition-colors hover:bg-slate-50/60"
+                  >
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-slate-900">
+                        {officer.full_name}
+                      </p>
+                      <p className="text-xs text-slate-500">{officer.email}</p>
+                      <p className="text-xs text-slate-500">{officer.phone}</p>
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">
+                      {officer.user_id}
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="text-slate-800">{officer.designation}</p>
+                      <p className="text-xs text-slate-500">
+                        {officer.department}
+                      </p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="flex items-center gap-1 text-slate-800">
+                        <MapPin size={13} className="text-slate-400" />
+                        {officer.police_station_name || 'Not assigned'}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {officer.district || ''}
+                      </p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex rounded-md px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
+                          STATUS_STYLES[officer.status] || STATUS_STYLES.INACTIVE
+                        }`}
                       >
-                        <Pencil size={16} />
-                      </button>
-                      {officer.status !== 'SUSPENDED' && (
+                        {officer.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-1.5">
                         <button
-                          onClick={() => changeStatus(officer)}
-                          title={officer.status === 'ACTIVE' ? 'Deactivate officer' : 'Activate officer'}
-                          className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-100"
+                          onClick={() => openEdit(officer)}
+                          title="Edit officer"
+                          className="rounded-lg border border-slate-200 p-1.5 text-blue-600 hover:bg-blue-50"
                         >
-                          {officer.status === 'ACTIVE' ? <UserX size={16} /> : <UserCheck size={16} />}
+                          <Pencil size={14} />
                         </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        {officer.status !== 'SUSPENDED' && (
+                          <button
+                            onClick={() => changeStatus(officer)}
+                            title={
+                              officer.status === 'ACTIVE'
+                                ? 'Deactivate officer'
+                                : 'Activate officer'
+                            }
+                            className="rounded-lg border border-slate-200 p-1.5 text-slate-600 hover:bg-slate-100"
+                          >
+                            {officer.status === 'ACTIVE' ? (
+                              <UserX size={14} />
+                            ) : (
+                              <UserCheck size={14} />
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
-        <div className="border-t border-slate-200 px-5 py-3 text-xs text-slate-500">
+        <div className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
           Showing {filteredOfficers.length} of {officers.length} officers
         </div>
       </div>
 
       {formOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4">
-          <div className="my-auto w-full max-w-2xl rounded-xl bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b p-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/40 p-4 backdrop-blur-sm">
+          <div className="my-auto w-full max-w-2xl rounded-xl border border-slate-200 bg-white shadow-lg">
+            <div className="flex items-start justify-between border-b border-slate-100 p-4">
               <div>
-                <h2 className="text-lg font-bold text-slate-900">
+                <h2 className="text-base font-semibold text-slate-900">
                   {editingId ? 'Edit Officer' : 'Add New Officer'}
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="mt-0.5 text-xs text-slate-500">
                   Enter the officer's account and posting details.
                 </p>
               </div>
               <button
                 onClick={closeForm}
                 disabled={saving}
-                className="rounded-lg p-2 hover:bg-slate-100"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
                 aria-label="Close form"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 p-5">
-              <div className="grid gap-4 sm:grid-cols-2">
+            <form onSubmit={handleSubmit} className="space-y-3 p-4">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <Field label="Full Name">
                   <input required name="full_name" value={form.full_name} onChange={handleChange} minLength={2} maxLength={120} className="form-input" placeholder="Officer full name" />
                 </Field>
@@ -444,28 +488,33 @@ export default function ManageOfficers() {
                 )}
               </div>
 
-              <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end">
+              <div className="flex flex-col-reverse gap-2 border-t border-slate-100 pt-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={closeForm}
                   disabled={saving}
-                  className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold hover:bg-slate-50"
+                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving || stations.length === 0}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
                 >
-                  {saving && <Loader2 size={16} className="animate-spin" />}
-                  {saving ? 'Saving...' : editingId ? 'Save Changes' : 'Create Officer'}
+                  {saving && <Loader2 size={15} className="animate-spin" />}
+                  {saving
+                    ? 'Saving...'
+                    : editingId
+                    ? 'Save Changes'
+                    : 'Create Officer'}
                 </button>
               </div>
 
               {stations.length === 0 && (
-                <p className="text-sm text-red-600">
-                  No active police stations are available. Add or activate a station first.
+                <p className="text-sm text-rose-600">
+                  No active police stations are available. Add or activate a
+                  station first.
                 </p>
               )}
             </form>
@@ -476,16 +525,19 @@ export default function ManageOfficers() {
       <style>{`
         .form-input {
           width: 100%;
-          border: 1px solid #cbd5e1;
+          border: 1px solid #e2e8f0;
           border-radius: 8px;
-          padding: 10px 12px;
+          padding: 8px 11px;
           font-size: 14px;
+          color: #1e293b;
           outline: none;
           background: white;
+          transition: border-color 120ms ease, box-shadow 120ms ease;
         }
+        .form-input::placeholder { color: #94a3b8; }
         .form-input:focus {
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 2px rgba(59,130,246,.12);
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
         }
       `}</style>
     </div>
@@ -494,8 +546,8 @@ export default function ManageOfficers() {
 
 function Field({ label, children }) {
   return (
-    <label className="block space-y-1.5">
-      <span className="text-sm font-medium text-slate-700">{label}</span>
+    <label className="block space-y-1">
+      <span className="text-xs font-medium text-slate-600">{label}</span>
       {children}
     </label>
   );

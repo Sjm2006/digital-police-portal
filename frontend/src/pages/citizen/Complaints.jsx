@@ -1,9 +1,11 @@
-
 import { useEffect, useState } from 'react';
 import apiClient from '../../services/apiClient';
 import PageHeader from '../../components/common/PageHeader';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
+
+const inputClass =
+  'w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100';
 
 export default function Complaints() {
   const [categories, setCategories] = useState([]);
@@ -38,8 +40,8 @@ export default function Complaints() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        err.message ||
-        'Unable to load complaint information.'
+          err.message ||
+          'Unable to load complaint information.'
       );
     } finally {
       setLoading(false);
@@ -76,16 +78,13 @@ export default function Complaints() {
     setSubmitting(true);
 
     try {
-      const response = await apiClient.post(
-        '/citizen/complaints.php',
-        {
-          ...form,
-          category_id: Number(form.category_id),
-          subject: form.subject.trim(),
-          description: form.description.trim(),
-          incident_location: form.incident_location.trim(),
-        }
-      );
+      const response = await apiClient.post('/citizen/complaints.php', {
+        ...form,
+        category_id: Number(form.category_id),
+        subject: form.subject.trim(),
+        description: form.description.trim(),
+        incident_location: form.incident_location.trim(),
+      });
 
       const data = response.data.data;
 
@@ -105,8 +104,8 @@ export default function Complaints() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        err.message ||
-        'Complaint submission failed.'
+          err.message ||
+          'Complaint submission failed.'
       );
     } finally {
       setSubmitting(false);
@@ -114,32 +113,32 @@ export default function Complaints() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       <PageHeader
         title="My Complaints"
         description="Submit a new complaint and track the progress of your existing complaints."
       />
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-rose-200 bg-rose-50/70 p-3 text-sm text-rose-700">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50/70 p-3 text-sm text-emerald-700">
           {success}
         </div>
       )}
 
       <Card>
-        <h2 className="mb-6 text-lg font-semibold text-navy-900">
+        <h2 className="mb-5 text-sm font-semibold text-slate-900">
           Submit a New Complaint
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-1.5 block text-xs font-medium text-slate-600">
               Complaint Category *
             </label>
             <select
@@ -147,7 +146,7 @@ export default function Complaints() {
               value={form.category_id}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-navy-700"
+              className={inputClass}
             >
               <option value="">Select a category</option>
               {categories.map((category) => (
@@ -159,7 +158,7 @@ export default function Complaints() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-1.5 block text-xs font-medium text-slate-600">
               Complaint Subject *
             </label>
             <input
@@ -170,12 +169,12 @@ export default function Complaints() {
               maxLength={200}
               required
               placeholder="Briefly describe your complaint"
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-navy-700"
+              className={inputClass}
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-1.5 block text-xs font-medium text-slate-600">
               Detailed Description *
             </label>
             <textarea
@@ -187,13 +186,13 @@ export default function Complaints() {
               required
               rows={5}
               placeholder="Explain what happened in detail..."
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-navy-700"
+              className={inputClass}
             />
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-xs font-medium text-slate-600">
                 Incident Date *
               </label>
               <input
@@ -203,12 +202,12 @@ export default function Complaints() {
                 onChange={handleChange}
                 max={today}
                 required
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-navy-700"
+                className={inputClass}
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-xs font-medium text-slate-600">
                 Incident Location *
               </label>
               <input
@@ -218,7 +217,7 @@ export default function Complaints() {
                 maxLength={255}
                 required
                 placeholder="Enter incident location"
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-navy-700"
+                className={inputClass}
               />
             </div>
           </div>
@@ -226,7 +225,7 @@ export default function Complaints() {
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-lg bg-navy-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? 'Submitting...' : 'Submit Complaint'}
           </button>
@@ -234,14 +233,14 @@ export default function Complaints() {
       </Card>
 
       <Card>
-        <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-navy-900">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-slate-900">
             Complaint History
           </h2>
           <button
             type="button"
             onClick={loadData}
-            className="text-sm font-medium text-navy-800 hover:underline"
+            className="text-xs font-medium text-blue-600 hover:text-blue-700"
           >
             Refresh
           </button>
@@ -256,27 +255,34 @@ export default function Complaints() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 text-slate-500">
-                  <th className="px-3 py-3">Reference</th>
-                  <th className="px-3 py-3">Subject</th>
-                  <th className="px-3 py-3">Category</th>
-                  <th className="px-3 py-3">Date</th>
-                  <th className="px-3 py-3">Status</th>
+              <thead className="bg-slate-50/60 text-[11px] uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th className="px-3 py-2.5 font-semibold">Reference</th>
+                  <th className="px-3 py-2.5 font-semibold">Subject</th>
+                  <th className="px-3 py-2.5 font-semibold">Category</th>
+                  <th className="px-3 py-2.5 font-semibold">Date</th>
+                  <th className="px-3 py-2.5 font-semibold">Status</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-slate-100">
                 {complaints.map((complaint) => (
-                  <tr key={complaint.id} className="border-b border-slate-100">
-                    <td className="px-3 py-4 font-medium text-navy-900">
+                  <tr
+                    key={complaint.id}
+                    className="transition-colors hover:bg-slate-50/60"
+                  >
+                    <td className="px-3 py-3 font-medium text-slate-900">
                       {complaint.complaint_ref}
                     </td>
-                    <td className="px-3 py-4">{complaint.subject}</td>
-                    <td className="px-3 py-4">{complaint.category_name}</td>
-                    <td className="px-3 py-4">
+                    <td className="px-3 py-3 text-slate-700">
+                      {complaint.subject}
+                    </td>
+                    <td className="px-3 py-3 text-slate-600">
+                      {complaint.category_name}
+                    </td>
+                    <td className="px-3 py-3 text-slate-600">
                       {complaint.incident_date}
                     </td>
-                    <td className="px-3 py-4">
+                    <td className="px-3 py-3">
                       <Badge>{complaint.status}</Badge>
                     </td>
                   </tr>
